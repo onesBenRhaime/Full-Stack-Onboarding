@@ -1,88 +1,87 @@
-/** @type {import('tailwindcss').Config} */
-const colors = require("tailwindcss/colors");
+import type { Config } from "tailwindcss";
 
-module.exports = {
+const config = {
+	darkMode: ["class"],
 	content: [
-		"./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-		"./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./pages/**/*.{ts,tsx}",
+		"./components/**/*.{ts,tsx}",
+		"./app/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}",
 	],
-	darkMode: "class",
+	prefix: "",
 	theme: {
 		container: {
 			center: true,
-			padding: "1rem",
-		},
-		containerPolicy: {
-			center: true,
-			padding: "5rem",
-		},
-		screens: {
-			xs: "450px",
-			sm: "575px",
-			md: "768px",
-			lg: "992px",
-			xl: "1200px",
-			"2xl": "1400px",
+			padding: "2rem",
+			screens: {
+				"2xl": "1400px",
+			},
 		},
 		extend: {
-			fontFamily: {
-				sans: ['"DM Sans"', "sans-serif"],
-			},
-			lineHeight: {
-				64: "16rem",
-			},
 			colors: {
-				linear: "#c6d1ed",
-				current: "currentColor",
-				transparent: "transparent",
-				white: "#FFFFFF",
-				black: "#121723",
-				dark: "#1D2430",
-				primary: "#8E54E9",
-				secondary: "#E8456B",
-				yellow: "#FBB040",
-				neutral: "#14142B",
-				danger: "red",
-
-				"bg-color-dark": "#171C28",
-				"body-color": {
-					DEFAULT: "#788293",
-					dark: "#959CB1",
+				border: "hsl(var(--border))",
+				input: "hsl(var(--input))",
+				ring: "hsl(var(--ring))",
+				background: "hsl(var(--background))",
+				foreground: "hsl(var(--foreground))",
+				primary: "#E08CFF",
+				secondary: {
+					DEFAULT: "hsl(var(--secondary))",
+					foreground: "hsl(var(--secondary-foreground))",
 				},
-				stroke: {
-					stroke: "#E3E8EF",
-					dark: "#353943",
+				destructive: {
+					DEFAULT: "hsl(var(--destructive))",
+					foreground: "hsl(var(--destructive-foreground))",
 				},
-				grayCookies: "#6F6C90",
-				gray: {
-					...colors.gray,
-					dark: "#1E232E",
-					light: "#F0F2F9",
+				muted: {
+					DEFAULT: "hsl(var(--muted))",
+					foreground: "hsl(var(--muted-foreground))",
 				},
-				"custom-blue": "#3A6AE5",
-				"custom-black": "#000000",
+				accent: {
+					DEFAULT: "hsl(var(--accent))",
+					foreground: "hsl(var(--accent-foreground))",
+				},
+				popover: {
+					DEFAULT: "hsl(var(--popover))",
+					foreground: "hsl(var(--popover-foreground))",
+				},
+				card: {
+					DEFAULT: "hsl(var(--card))",
+					foreground: "hsl(var(--card-foreground))",
+				},
 			},
-			boxShadow: {
-				one: "0px 2px 3px rgba(7, 7, 77, 0.05)",
-				two: "0px 5px 10px rgba(6, 8, 15, 0.1)",
-				three: "0px 5px 15px rgba(6, 8, 15, 0.05)",
-				sticky: "inset 0 -1px 0 0 rgba(0, 0, 0, 0.1)",
-				"sticky-dark": "inset 0 -1px 0 0 rgba(255, 255, 255, 0.1)",
-				"feature-2": "0px 10px 40px rgba(48, 86, 211, 0.12)",
-				submit: "0px 5px 20px rgba(4, 10, 34, 0.1)",
-				"submit-dark": "0px 5px 20px rgba(4, 10, 34, 0.1)",
-				btn: "0px 1px 2px rgba(4, 10, 34, 0.15)",
-				"btn-hover": "0px 1px 2px rgba(0, 0, 0, 0.15)",
-				"btn-light": "0px 1px 2px rgba(0, 0, 0, 0.1)",
+			borderRadius: {
+				lg: "var(--radius)",
+				md: "calc(var(--radius) - 2px)",
+				sm: "calc(var(--radius) - 4px)",
 			},
-			dropShadow: {
-				three: "0px 5px 15px rgba(6, 8, 15, 0.05)",
+			keyframes: {
+				"fade-in": {
+					from: {
+						opacity: "0",
+					},
+					to: {
+						opacity: "1",
+					},
+				},
+				marquee: {
+					"100%": {
+						transform: "translateY(-50%)",
+					},
+				},
+				flashing: {
+					"0%, 100%": { opacity: "0.2" },
+					"20%": { opacity: "1" },
+				},
 			},
-			background: {
-				"custom-gradient": "#c6d1ed",
+			animation: {
+				"fade-in": "fade-in 0.3s ease-in-out",
+				marquee: "marquee 10s linear infinite",
+				flashing: "flashing 1s infinite",
 			},
 		},
 	},
-	plugins: [],
-};
+	plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+
+export default config;
