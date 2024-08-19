@@ -48,7 +48,7 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return an access token', async () => {
-      const user = { username: 'test', id: 1 };
+      const user = { email: 'test@test.tn', id: 1 };
       const result = { access_token: 'token' };
       jest.spyOn(authService, 'login').mockResolvedValue(result);
 

@@ -19,64 +19,24 @@ const config = {
 		},
 		extend: {
 			colors: {
-				border: "hsl(var(--border))",
-				input: "hsl(var(--input))",
-				ring: "hsl(var(--ring))",
-				background: "hsl(var(--background))",
-				foreground: "hsl(var(--foreground))",
 				primary: "#E08CFF",
-				secondary: {
-					DEFAULT: "hsl(var(--secondary))",
-					foreground: "hsl(var(--secondary-foreground))",
-				},
-				destructive: {
-					DEFAULT: "hsl(var(--destructive))",
-					foreground: "hsl(var(--destructive-foreground))",
-				},
-				muted: {
-					DEFAULT: "hsl(var(--muted))",
-					foreground: "hsl(var(--muted-foreground))",
-				},
-				accent: {
-					DEFAULT: "hsl(var(--accent))",
-					foreground: "hsl(var(--accent-foreground))",
-				},
-				popover: {
-					DEFAULT: "hsl(var(--popover))",
-					foreground: "hsl(var(--popover-foreground))",
-				},
-				card: {
-					DEFAULT: "hsl(var(--card))",
-					foreground: "hsl(var(--card-foreground))",
-				},
+				secondary: "#FCF7F1",
 			},
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
 			},
+
 			keyframes: {
-				"fade-in": {
-					from: {
-						opacity: "0",
-					},
-					to: {
-						opacity: "1",
-					},
-				},
 				marquee: {
-					"100%": {
-						transform: "translateY(-50%)",
-					},
-				},
-				flashing: {
-					"0%, 100%": { opacity: "0.2" },
-					"20%": { opacity: "1" },
+					"0%": { transform: "translateX(100%)" },
+					"100%": { transform: "translateX(-100%)" },
 				},
 			},
 			animation: {
 				"fade-in": "fade-in 0.3s ease-in-out",
-				marquee: "marquee 10s linear infinite",
+				marquee: "marquee 25s linear infinite",
 				flashing: "flashing 1s infinite",
 			},
 		},

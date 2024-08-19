@@ -39,14 +39,18 @@ describe('AuthService', () => {
 
   describe('validateUser', () => {
     it('should return user if valid', async () => {
-      const result = { id: 1, username: 'test', password: 'hashedPassword' };
+      const result = {
+        id: 1,
+        email: 'test@test.tn',
+        password: 'hashedPassword',
+      };
       jest
         .spyOn(userService, 'findByUsername')
         .mockResolvedValue(result as any);
       jest.spyOn(bcrypt, 'compare').mockResolvedValue(true);
 
-      const user = await service.validateUser('test', 'password');
-      expect(user).toEqual({ id: 1, username: 'test' });
+      const user = await service.validateUser('test@test.tn', 'password');
+      expect(user).toEqual({ id: 1, email: 'test@test.tn' });
     });
 
     it('should return null if invalid', async () => {
@@ -63,7 +67,7 @@ describe('AuthService', () => {
       const result = { access_token: 'token' };
       jest.spyOn(jwtService, 'sign').mockReturnValue('token');
 
-      const user = { username: 'test', id: 1 };
+      const user = { email: 'test@test.tn', id: 1 };
       expect(await service.login(user)).toEqual(result);
     });
   });

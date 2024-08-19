@@ -5,7 +5,7 @@ import Image from "next/image";
 const Hero = () => {
 	return (
 		<>
-			<div className="bg-slate-50 grainy-light">
+			<div className=" grainy-light container">
 				<MaxWidthWrapper className="pb-24 pt-10 lg:grid lg:grid-cols-3 sm:pb-32 lg:gap-x-0 xl:gap-x-8 lg:pt-24 xl:pt-32 lg:pb-52">
 					<section className=" py-5 flex flex-row justify-between items-center ">
 						<div className="flex flex-col items-center lg:items-start">

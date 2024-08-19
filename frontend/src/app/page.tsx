@@ -1,5 +1,7 @@
 import Header from "@/components/Header/Header";
 import Hero from "@/components/Hero/heroSection";
+import Promo from "@/components/Products/promo";
+import Shopping from "@/components/Products/shoppingSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,8 +13,12 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
-			<Header />
-			<Hero />
+			<div className="bg-secondary">
+				<Header />
+				<Hero />
+				<Promo />
+				<Shopping />
+			</div>
 		</>
 	);
 }

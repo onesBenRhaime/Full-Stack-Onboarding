@@ -18,13 +18,13 @@ const Header = async () => {
 								</Link>
 							</li>
 							<li>
-								<Link href="/login" className="hover:underline">
-									Login
+								<Link href="/products" className="hover:underline">
+									Products
 								</Link>
 							</li>
 							<li>
-								<Link href="/register" className="hover:underline">
-									Register
+								<Link href="/about" className="hover:underline">
+									About
 								</Link>
 							</li>
 						</ul>

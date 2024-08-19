@@ -6,5 +6,5 @@ export class CreateRoleDto {
   readonly name: string;
 
   @IsString()
-  readonly description?: string; 
+  readonly description?: string;
 }

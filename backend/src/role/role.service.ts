@@ -36,7 +36,7 @@ export class RoleService {
   }
 
   async remove(id: number): Promise<void> {
-    await this.findOne(id); 
+    await this.findOne(id);
     await this.roleRepository.delete(id);
   }
 }
