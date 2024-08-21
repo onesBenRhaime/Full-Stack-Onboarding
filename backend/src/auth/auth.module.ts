@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { RoleModule } from '../role/role.module';
 import { User } from '../user/entities/user.entity';
 import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
@@ -18,6 +19,7 @@ import { LocalStrategy } from './strategies/local.strategy';
       signOptions: { expiresIn: '60m' },
     }),
     UserModule,
+    RoleModule,
   ],
   providers: [AuthService, JwtStrategy, LocalStrategy],
   controllers: [AuthController],

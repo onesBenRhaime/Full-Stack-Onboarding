@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { Role } from './entities/role.entity';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Role } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
@@ -38,5 +38,13 @@ export class RoleService {
   async remove(id: number): Promise<void> {
     await this.findOne(id);
     await this.roleRepository.delete(id);
+  }
+  //find role by name .
+  async findOneByName(name: string): Promise<Role> {
+    const role = await this.roleRepository.findOne({ where: { name } });
+    if (!role) {
+      throw new NotFoundException(`Role with name ${name} not found`);
+    }
+    return role;
   }
 }

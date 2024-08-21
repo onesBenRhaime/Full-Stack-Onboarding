@@ -13,8 +13,12 @@ const schema = Yup.object({
 	email: Yup.string()
 		.email("Invalid email address")
 		.required("Email is required"),
-	password: Yup.string().required("Password is required"),
+	password: Yup.string()
+		.min(6, "Password must be more than 5 characters")
+		.matches(/^[a-zA-Z0-9]*$/, "Password must be alphanumeric")
+		.required("Password is required"),
 });
+// Password must be more then  6 characters
 
 export default function Register() {
 	const [email, setEmail] = useState("");
@@ -72,6 +76,9 @@ export default function Register() {
 		<>
 			<section className="relative flex flex-col md:flex-row justify-between items-center">
 				<div className="w-full md:w-auto">
+					<h1 className=" fixed left-20 top-8 z-0  font-bold text-2xl">
+						<span className="text-primary ">E-</span>commerce
+					</h1>
 					<Image
 						width="945"
 						height="1024"

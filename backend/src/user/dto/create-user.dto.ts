@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { Role } from '../../role/entities/role.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -14,5 +15,5 @@ export class CreateUserDto {
   readonly password: string;
 
   @IsString()
-  readonly role: string;
+  readonly role: Role;
 }

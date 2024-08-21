@@ -24,7 +24,7 @@ const Shopping = () => {
 							</nav>
 						</div>
 						<div className=" item-center width-1/3 flex flex-row justify-center gap-x-9 gap-y-5  mt-10">
-							<div className="relative w-full transform-gpu bg-white shadow-three transition duration-300 ease-in-out hover:-translate-y-5  ">
+							<div className=" w-full transform-gpu bg-white shadow-three transition duration-300 ease-in-out hover:-translate-y-5  ">
 								<div className="rounded-sm  px-8 py-2  hover:shadow-one ">
 									<div className="flex items-center ">
 										<Image
@@ -34,8 +34,13 @@ const Shopping = () => {
 											alt="fsdf"
 											className="mb-8"
 										/>
-									</div>
-									<div className="flex-row mb-2">
+									</div>{" "}
+									<div className="flex-row mb-2 mt-2">
+										<div className="flex  mb-5">
+											<span className="w-4 h-4 rounded-full bg-amber-500 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-orange-700 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-teal-600 mx-1"></span>
+										</div>
 										<h1 className="font-semibold text-3xl mb-8">T-shirt</h1>
 										<p className="text-gray-400 font-medium  text-lg w-80 mb-8">
 											Turn heads with the Elegant Floral Midi Dress, a perfect
@@ -69,7 +74,12 @@ const Shopping = () => {
 											className="mb-8"
 										/>
 									</div>
-									<div className="flex-row mb-2">
+									<div className="flex-row mb-2 mt-2">
+										<div className="flex  mb-5">
+											<span className="w-4 h-4 rounded-full bg-amber-500 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-orange-700 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-teal-600 mx-1"></span>
+										</div>
 										<h1 className="font-semibold text-3xl mb-8">T-shirt</h1>
 										<p className="text-gray-400 font-medium  text-lg w-80 mb-8">
 											Turn heads with the Elegant Floral Midi Dress, a perfect
@@ -103,7 +113,12 @@ const Shopping = () => {
 											className="mb-8"
 										/>
 									</div>
-									<div className="flex-row mb-2">
+									<div className="flex-row mb-2 mt-2">
+										<div className="flex  mb-5">
+											<span className="w-4 h-4 rounded-full bg-amber-500 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-orange-700 mx-1"></span>
+											<span className="w-4 h-4 rounded-full bg-teal-600 mx-1"></span>
+										</div>
 										<h1 className="font-semibold text-3xl mb-8">T-shirt</h1>
 										<p className="text-gray-400 font-medium  text-lg w-80 mb-8">
 											Turn heads with the Elegant Floral Midi Dress, a perfect

@@ -5,11 +5,11 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import * as Yup from "yup";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
+import Toast from "@/components/ui/Toast";
+import Cookies from "js-cookie";
 const schema = Yup.object({
-	email: Yup.string()
-		.email("Invalid email format")
-		.required("Email is required"),
+	username: Yup.string().required("UserName is required"),
 	password: Yup.string().required("Password is required"),
 });
 
@@ -20,12 +20,49 @@ export default function Login() {
 		username?: string;
 		password?: string;
 	}>({});
+	const [alertMessage, setAlertMessage] = useState<{
+		title: string;
+		description: string;
+		variant: "success" | "error" | "info" | "warning";
+	} | null>(null);
+	const router = useRouter();
 
 	const mutation = useMutation({
 		mutationFn: (data: any) =>
 			axios.post("http://localhost:5000/auth/login", data),
 		onSuccess: (data) => {
-			alert("Login successful");
+			const token = data?.data?.access_token;
+
+			if (token) {
+				Cookies.set("authToken", token, { expires: 1 });
+
+				setAlertMessage({
+					title: "Login Successful",
+					description: "You have logged in successfully.",
+					variant: "success",
+				});
+				setTimeout(() => {
+					setAlertMessage(null);
+					router.push(`/`);
+				}, 1000);
+			}
+			// setAlertMessage({
+			// 	title: "Login Successful",
+			// 	description: "You have logged in successfully.",
+			// 	variant: "success",
+			// });
+			// setTimeout(() => {
+			// 	setAlertMessage(null);
+			// 	router.push(`/`);
+			// }, 1000);
+		},
+		onError: (error) => {
+			setAlertMessage({
+				title: "Login Failed",
+				description: `Invalid username or password: ${error.message}`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
 
@@ -56,10 +93,10 @@ export default function Login() {
 	};
 
 	return (
-		<section className=" flex flex-row justify-between  fixed">
+		<section className="flex flex-row justify-between fixed">
 			<div className="w-auto">
-				<h1 className=" fixed left-20 top-8 z-0  font-bold text-2xl">
-					<span className="text-primary ">E-</span>commerce
+				<h1 className="fixed left-20 top-8 z-0 font-bold text-2xl">
+					<span className="text-primary">E-</span>commerce
 				</h1>
 				<Image
 					width="945"
@@ -69,6 +106,16 @@ export default function Login() {
 				/>
 			</div>
 			<div className="w-1/3 top-0 ms-4 mt-40 ml-10">
+				{/* Toast Notification */}
+				{alertMessage && (
+					<div className="fixed bottom-4 top-0  right-4  ">
+						<Toast
+							title={alertMessage.title}
+							description={alertMessage.description}
+							variant={alertMessage.variant}
+						/>
+					</div>
+				)}
 				<h1 className="font-bold text-3xl text-black">Welcome 👋</h1>
 				<p className="text-gray-500 text-xl font-sans py-4">
 					Please login here
@@ -77,17 +124,17 @@ export default function Login() {
 				<form onSubmit={onSubmit}>
 					<div className="mb-8">
 						<label
-							htmlFor="email"
+							htmlFor="username"
 							className="mb-3 block text-sm text-dark font-sans"
 						>
-							Email Address
+							User Name
 						</label>
 						<input
-							type="email"
+							type="text"
 							id="username"
 							value={username}
 							onChange={(e) => setUsername(e.target.value)}
-							placeholder="Enter your Email"
+							placeholder="Enter your User Name"
 							className="w-full rounded-md bg-white px-6 py-3 text-base outline-none transition-all duration-300"
 							style={{ border: "1px solid #131118", borderRadius: "10px" }}
 						/>

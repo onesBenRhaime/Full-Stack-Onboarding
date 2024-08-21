@@ -8,41 +8,51 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/RolesGuard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Roles('admin')
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
+  @Roles('admin')
   async findAll() {
     return await this.userService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get(':id')
+  @Roles('admin')
   async findOne(@Param('id') id: number) {
     return await this.userService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @Roles('admin')
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return await this.userService.update(id, updateUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @Roles('admin')
   async remove(@Param('id') id: number) {
     return await this.userService.remove(id);
+  }
+
+  @Post(':id/assign-role')
+  @Roles('admin')
+  async assignRole(@Param('id') id: number, @Body('role') role: string) {
+    return await this.userService.assignRole(id, role);
   }
 }
