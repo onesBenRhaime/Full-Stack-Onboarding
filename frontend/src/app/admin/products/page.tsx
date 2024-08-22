@@ -1,16 +1,8 @@
+"use client";
 import Sidebar from "@/components/Admin/Sidebar";
 import Topbar from "@/components/Admin/Topbar";
 import ProductGrid from "@/components/Products/productGrid";
-import Shopping from "@/components/Products/shoppingSection";
-import ListUsers from "@/components/Users/ListUsers";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: "Dashboard E-Commerce ",
-	description: "This is Website for E-Commerce Fullstack onboarding Project",
-};
-
-export default function Users() {
+const Products = () => {
 	return (
 		<>
 			<div className=" flex h-screen">
@@ -20,12 +12,13 @@ export default function Users() {
 					<Topbar />
 					<div className=" bg-gray-100 flex-1 p-4">
 						<div className="flex-1 p-4">
-							<h1>Users</h1>
-							<ListUsers />
+							<ProductGrid />
 						</div>
 					</div>
 				</div>
 			</div>
 		</>
 	);
-}
+};
+
+export default Products;

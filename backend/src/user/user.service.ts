@@ -14,21 +14,28 @@ export class UserService {
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
   ) {}
+
   async findByIdWithRoles(userId: number): Promise<User> {
     return this.userRepository.findOne({
       where: { id: userId },
       relations: ['roles'], // Inclure les rôles
     });
   }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
-    //default role is user
-    const role = await this.roleRepository.findOneBy({ name: 'user' });
+
+    //user par defaut
+    const role = await this.roleRepository.findOneBy({ name: 'admin' });
     user.roles = [role];
 
     return await this.userRepository.save(user);
   }
-  // Assign a role to a user
+
+  async findOne(id: number): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
+  }
+
   async assignRole(userId: number, roleName: string): Promise<User> {
     const user = await this.findOne(userId);
     const role = await this.roleRepository.findOneBy({ name: roleName });
@@ -40,12 +47,28 @@ export class UserService {
     user.roles.push(role);
     return await this.userRepository.save(user);
   }
+
+  // async findOne(id: number): Promise<User> {
+  //   return await this.userRepository.findOne({
+  //     where: { id },
+  //     relations: ['roles'], // Assurez-vous que les rôles sont chargés
+  //   });
+  // }
+
+  // async assignRole(userId: number, roleName: string): Promise<User> {
+  //   const user = await this.findOne(userId);
+  //   const role = await this.roleRepository.findOneBy({ name: roleName });
+
+  //   if (!role) {
+  //     throw new Error('Role not found');
+  //   }
+
+  //   user.roles.push(role);
+  //   return await this.userRepository.save(user);
+  // }
+
   async findAll(): Promise<User[]> {
     return await this.userRepository.find();
-  }
-
-  async findOne(id: number): Promise<User> {
-    return await this.userRepository.findOneBy({ id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {

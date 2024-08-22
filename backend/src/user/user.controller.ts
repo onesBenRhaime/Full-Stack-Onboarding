@@ -51,7 +51,7 @@ export class UserController {
   }
 
   @Post(':id/assign-role')
-  @Roles('admin')
+  @Roles('user')
   async assignRole(@Param('id') id: number, @Body('role') role: string) {
     return await this.userService.assignRole(id, role);
   }

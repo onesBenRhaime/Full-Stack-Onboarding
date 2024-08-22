@@ -1,7 +1,6 @@
 import { Recursive } from "next/font/google";
 import "../styles/globals.css";
 import Providers from "../components/Providers";
-import Header from "@/components/Header/Header";
 
 const recursive = Recursive({ subsets: ["latin"] });
 

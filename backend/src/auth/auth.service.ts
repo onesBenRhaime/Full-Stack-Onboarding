@@ -53,7 +53,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     // role
-    const userRole = await this.roleService.findOneByName('user');
+    const userRole = await this.roleService.findOneByName('admin');
     if (!userRole) {
       throw new Error('Default role not found');
     }

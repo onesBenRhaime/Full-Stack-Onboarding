@@ -14,7 +14,6 @@ const Header = () => {
 		username: string;
 		role: Array<string>;
 	} | null>(null);
-
 	const { data: token } = useQuery({
 		queryKey: ["authToken"],
 		queryFn: () => {
@@ -22,7 +21,8 @@ const Header = () => {
 			if (token) {
 				const decodedToken: { username: string; role: Array<string> } =
 					jwt_decode(token);
-				console.log(decodedToken);
+				// localStorage.setItem("role", decodedToken.role.join(","));
+				// localStorage.setItem("username", decodedToken.username);
 
 				setUserInfo({
 					username: decodedToken.username,
@@ -38,7 +38,6 @@ const Header = () => {
 		Cookies.remove("authToken");
 		router.push("/auth/login");
 	};
-	//decoder le token et  get le username et le role et stokcer  dans un state
 
 	return (
 		<nav className="sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
@@ -47,8 +46,8 @@ const Header = () => {
 					<Link href="/" className="flex z-40 font-semibold">
 						{userInfo?.role && userInfo.role.includes("admin") ? (
 							<span>
-								ADMIN Dash E-
-								<span className="text-primary">commerce</span>
+								E-
+								<span className="text-primary">commerce</span> ADMIN Dash
 							</span>
 						) : (
 							<span>
@@ -86,6 +85,8 @@ const Header = () => {
 									alt="User"
 									className="me-2"
 								/>
+								<span className="me-2">{userInfo?.username}</span>
+								<div className="h-4 w-px bg-zinc-600  sm:block" />
 								<button onClick={handleLogout} className="me-2 hover:underline">
 									Logout
 								</button>
@@ -100,14 +101,6 @@ const Header = () => {
 										alt="Search"
 										className="me-2"
 									/>
-									{userInfo && (
-										<>
-											<span>{userInfo.username}</span>
-											{userInfo.role && userInfo.role.length > 0 && (
-												<span>{userInfo.role.join(", ")}</span>
-											)}
-										</>
-									)}
 								</Link>
 								<div className="h-4 w-px bg-zinc-600  sm:block" />
 								<Image
@@ -117,6 +110,7 @@ const Header = () => {
 									alt="User"
 									className="me-2"
 								/>
+
 								<Link href="/auth/login" className="me-2 hover:underline">
 									Login
 								</Link>

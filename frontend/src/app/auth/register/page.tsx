@@ -6,7 +6,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import Toast from "@/components/ui/Toast";
 import * as Yup from "yup";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
 const schema = Yup.object({
 	username: Yup.string().required("Username is required"),
@@ -21,6 +24,7 @@ const schema = Yup.object({
 // Password must be more then  6 characters
 
 export default function Register() {
+	const router = useRouter();
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
@@ -29,18 +33,41 @@ export default function Register() {
 		email?: string;
 		password?: string;
 	}>({});
+	const [alertMessage, setAlertMessage] = useState<{
+		title: string;
+		description: string;
+		variant: "success" | "error" | "info" | "warning";
+	} | null>(null);
 	const mutation = useMutation({
 		mutationFn: (data: any) =>
 			axios.post("http://localhost:5000/auth/register", data),
 		onSuccess: (data) => {
 			if (data.status === 401) {
-				alert("Invalid credentials");
+				setAlertMessage({
+					title: "Register Failed",
+					description: `User already exists`,
+					variant: "error",
+				});
+				setTimeout(() => setAlertMessage(null), 3000);
 				return;
 			}
-			alert("Register successful");
+			setAlertMessage({
+				title: "Register Successful",
+				description: "You have registered successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 3000);
+			router.push("/auth/login");
 		},
 		onError: () => {
-			alert("An error occurred");
+			setAlertMessage({
+				title: "Register Failed",
+				description: "Something went wrong",
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
 	const validateForm = async () => {
@@ -76,6 +103,15 @@ export default function Register() {
 		<>
 			<section className="relative flex flex-col md:flex-row justify-between items-center">
 				<div className="w-full md:w-auto">
+					{alertMessage && (
+						<div className="fixed bottom-4 top-0  right-4  ">
+							<Toast
+								title={alertMessage.title}
+								description={alertMessage.description}
+								variant={alertMessage.variant}
+							/>
+						</div>
+					)}
 					<h1 className=" fixed left-20 top-8 z-0  font-bold text-2xl">
 						<span className="text-primary ">E-</span>commerce
 					</h1>

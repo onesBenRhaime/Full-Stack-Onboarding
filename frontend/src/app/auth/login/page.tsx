@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/ui/Toast";
 import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
 const schema = Yup.object({
 	username: Yup.string().required("UserName is required"),
 	password: Yup.string().required("Password is required"),
@@ -35,7 +36,8 @@ export default function Login() {
 
 			if (token) {
 				Cookies.set("authToken", token, { expires: 1 });
-
+				const decodedToken: { username: string; role: Array<string> } =
+					jwt_decode(token);
 				setAlertMessage({
 					title: "Login Successful",
 					description: "You have logged in successfully.",
@@ -43,18 +45,12 @@ export default function Login() {
 				});
 				setTimeout(() => {
 					setAlertMessage(null);
-					router.push(`/`);
+
+					decodedToken.role.includes("admin")
+						? router.push(`/admin`)
+						: router.push(`/`);
 				}, 1000);
 			}
-			// setAlertMessage({
-			// 	title: "Login Successful",
-			// 	description: "You have logged in successfully.",
-			// 	variant: "success",
-			// });
-			// setTimeout(() => {
-			// 	setAlertMessage(null);
-			// 	router.push(`/`);
-			// }, 1000);
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -106,7 +102,6 @@ export default function Login() {
 				/>
 			</div>
 			<div className="w-1/3 top-0 ms-4 mt-40 ml-10">
-				{/* Toast Notification */}
 				{alertMessage && (
 					<div className="fixed bottom-4 top-0  right-4  ">
 						<Toast
