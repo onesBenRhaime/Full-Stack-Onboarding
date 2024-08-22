@@ -44,7 +44,12 @@ export class UserService {
       throw new Error('Role not found');
     }
 
+    if (!user.roles) {
+      user.roles = [];
+    }
+
     user.roles.push(role);
+
     return await this.userRepository.save(user);
   }
 

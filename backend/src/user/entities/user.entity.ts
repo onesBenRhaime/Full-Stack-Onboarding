@@ -21,6 +21,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: 'default-image.png' })
+  image: string;
+
+  @Column({ default: 'active' })
+  status: string;
+
   @ManyToMany(() => Role)
   @JoinTable()
   roles: Role[];

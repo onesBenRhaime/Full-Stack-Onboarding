@@ -29,7 +29,7 @@ const Sidebar = () => {
 				<div className="flex flex-col items-center justify-center">
 					<div className="flex items-center justify-center mt-4 py-4 ">
 						{/* h-12 w-12 rounded-full bg-white text-black */}
-						<Link href="/" className="flex z-40 font-semibold">
+						<Link href="/" className="flex z-40 font-semibold text-xl">
 							E-
 							<span className="text-primary">commerce</span>
 						</Link>
@@ -121,7 +121,12 @@ const Sidebar = () => {
 								<ul className="list-none px-0">
 									{category?.map((cat: any) => (
 										<li key={cat.id} className="text-black px-8 py-4">
-											<Link href={`/admin/category/${cat.id}`}>{cat.name}</Link>
+											<Link
+												href={`/admin/category/${cat.id}`}
+												className="font-semibold hover:text-primary"
+											>
+												{cat.name}
+											</Link>
 										</li>
 									))}
 								</ul>

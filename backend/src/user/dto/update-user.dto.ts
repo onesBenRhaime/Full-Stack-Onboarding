@@ -19,5 +19,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsString()
   @IsOptional()
+  readonly image?: string;
+
+  @IsString()
+  @IsOptional()
+  readonly status?: string;
+
+  @IsString()
+  @IsOptional()
   readonly role?: Role;
 }
