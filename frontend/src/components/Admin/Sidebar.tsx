@@ -1,8 +1,28 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const Sidebar = () => {
+	const fetchcategorys = async () => {
+		const response = await fetch("http://localhost:5000/categories"); // Remplacez par votre endpoint API
+		if (!response.ok) {
+			throw new Error("Network response was not ok");
+		}
+		return response.json();
+	};
+
+	const { data: category } = useQuery({
+		queryKey: ["categorys"],
+		queryFn: fetchcategorys,
+		staleTime: Infinity,
+	});
+	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleList = () => {
+		setIsOpen(!isOpen);
+	};
 	return (
 		<>
 			<div className="bg-white w-1/3 lg:w-1/6 h-full">
@@ -73,17 +93,39 @@ const Sidebar = () => {
 						</ul>
 						{/* ///open ul with cone for catgories it have lit of categories :
 							main - wommen - kids and it is a text bold and hover effect */}
-						<ul>
-							<li className="  flex justify-between  text-black px-0   mb-4 text-bold text-lg uppercase font-bold ">
+						<ul className="list-none">
+							<li
+								className="flex justify-between items-center text-black px-4 mb-4 text-lg font-bold uppercase cursor-pointer"
+								onClick={toggleList}
+							>
 								Categories
-								<Image
-									src="/icons/open.svg"
-									className="w-8 h-8 "
-									width={6}
-									height={6}
-									alt="open list"
-								/>
+								{isOpen ? (
+									<Image
+										src="/icons/retract.svg"
+										className="w-8 h-8"
+										width={32}
+										height={32}
+										alt="close list"
+									/>
+								) : (
+									<Image
+										src="/icons/open.svg"
+										className="w-8 h-8"
+										width={32} // Remplacez par la largeur souhaitée en pixels
+										height={32} // Remplacez par la hauteur souhaitée en pixels
+										alt="open list"
+									/>
+								)}
 							</li>
+							{isOpen && (
+								<ul className="list-none px-0">
+									{category?.map((cat: any) => (
+										<li key={cat.id} className="text-black px-8 py-4">
+											<Link href={`/admin/category/${cat.id}`}>{cat.name}</Link>
+										</li>
+									))}
+								</ul>
+							)}
 						</ul>
 					</nav>
 				</div>
