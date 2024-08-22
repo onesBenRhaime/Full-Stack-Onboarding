@@ -1,10 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
-import Modal from "../ui/Modal";
+import Modal from "../ui/ModalAddProduct";
 import { useState } from "react";
+import Toast from "../ui/Toast";
 
 export default function ProductGrid() {
+	const [alertMessage, setAlertMessage] = useState<{
+		title: string;
+		description: string;
+		variant: "success" | "error" | "info" | "warning";
+	} | null>(null);
 	const fetchProducts = async () => {
 		const response = await fetch("http://localhost:5000/products");
 		if (!response.ok) {
@@ -19,13 +25,44 @@ export default function ProductGrid() {
 		staleTime: Infinity,
 	});
 
+	const addProduct = async (product: any) => {
+		const response = await axios.post(
+			"http://localhost:5000/products",
+			product
+		);
+		return response.data;
+	};
+
+	const mutation = useMutation({
+		mutationFn: addProduct,
+		onSuccess: () => {
+			setAlertMessage({
+				title: "Product Added",
+				description: "Product has been added successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 5000);
+		},
+		onError: (error) => {
+			setAlertMessage({
+				title: "Product Failed",
+				description: `Failed to add product: ${error.message}`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
+		},
+	});
+
 	const handleAddProduct = async (product: any) => {
 		try {
-			await axios.post("http://localhost:5000/products", product);
+			await mutation.mutateAsync(product);
 		} catch (error) {
 			console.error("Failed to add product:", error);
 		}
 	};
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	return (
 		<div className="flex-1 p-4">
@@ -38,7 +75,15 @@ export default function ProductGrid() {
 					+ ADD NEW PRODUCT
 				</button>
 			</div>
-
+			{alertMessage && (
+				<div className="fixed bottom-4 top-20 right-4  ">
+					<Toast
+						title={alertMessage.title}
+						description={alertMessage.description}
+						variant={alertMessage.variant}
+					/>
+				</div>
+			)}
 			<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
 				{products?.map((item: any, index: any) => (
 					<div key={index} className="bg-white p-4 rounded-xl shadow-lg">

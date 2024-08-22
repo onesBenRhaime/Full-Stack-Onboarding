@@ -49,7 +49,7 @@ export default function Login() {
 					decodedToken.role.includes("admin")
 						? router.push(`/admin`)
 						: router.push(`/`);
-				}, 1000);
+				}, 3000);
 			}
 		},
 		onError: (error) => {
