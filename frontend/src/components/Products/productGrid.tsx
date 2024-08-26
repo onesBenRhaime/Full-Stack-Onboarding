@@ -2,10 +2,17 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Modal from "../ui/ModalAddProduct";
-import { useState } from "react";
+
 import Toast from "../ui/Toast";
+import ModalEditProduct from "../ui/ModalEditProduct";
+import { Product } from "../../../types/product";
+import { useState } from "react";
 
 export default function ProductGrid() {
+	const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
+	const [currentProduct, setCurrentProduct] = useState<any>(null);
+	const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [alertMessage, setAlertMessage] = useState<{
 		title: string;
 		description: string;
@@ -14,7 +21,7 @@ export default function ProductGrid() {
 	const fetchProducts = async () => {
 		const response = await fetch("http://localhost:5000/products");
 		if (!response.ok) {
-			throw new Error("Network response was not ok");
+			throw new Error("Network response  problem");
 		}
 		return response.json();
 	};
@@ -29,6 +36,19 @@ export default function ProductGrid() {
 		const response = await axios.post(
 			"http://localhost:5000/products",
 			product
+		);
+		return response.data;
+	};
+	const editProduct = async (product: any) => {
+		const response = await axios.patch(
+			`http://localhost:5000/products/${product.id}`,
+			product
+		);
+		return response.data;
+	};
+	const removeProduct = async (productId: number) => {
+		const response = await axios.delete(
+			`http://localhost:5000/products/${productId}`
 		);
 		return response.data;
 	};
@@ -54,7 +74,49 @@ export default function ProductGrid() {
 			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
-
+	const editMutation = useMutation({
+		mutationFn: editProduct,
+		onSuccess: () => {
+			setAlertMessage({
+				title: "Product Updated",
+				description: "Product has been updated successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 5000);
+		},
+		onError: (error) => {
+			setAlertMessage({
+				title: "Update Failed",
+				description: `Failed to update product: ${error.message}`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
+		},
+	});
+	const removeMutation = useMutation({
+		mutationFn: removeProduct,
+		onSuccess: () => {
+			setAlertMessage({
+				title: "Product deleted",
+				description: "Product has been deleted successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+				window.location.reload();
+			}, 1000);
+		},
+		onError: (error) => {
+			setAlertMessage({
+				title: "Delete Failed",
+				description: `Failed to delete product: ${error.message}`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
+		},
+	});
 	const handleAddProduct = async (product: any) => {
 		try {
 			await mutation.mutateAsync(product);
@@ -63,7 +125,34 @@ export default function ProductGrid() {
 		}
 	};
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const handleEditProduct = async (product: Product) => {
+		try {
+			await editMutation.mutateAsync(product);
+		} catch (error) {
+			console.error("Failed to edit product:", error);
+		}
+	};
+
+	const handleDropdownToggle = (index: number) => {
+		if (isDropdownOpen === index) {
+			setIsDropdownOpen(null);
+		} else {
+			setIsDropdownOpen(index);
+		}
+	};
+	const handleEdit = (product: Product) => {
+		setCurrentProduct(product);
+		setIsModalEditOpen(true);
+	};
+
+	const handleDelete = async (productId: number) => {
+		try {
+			await removeMutation.mutateAsync(productId);
+		} catch (error) {
+			console.error("Failed to edit product:", error);
+		}
+	};
+
 	return (
 		<div className="flex-1 p-4">
 			<div className="flex justify-between items-center mb-4">
@@ -89,7 +178,7 @@ export default function ProductGrid() {
 					<div key={index} className="bg-white p-4 rounded-xl shadow-lg">
 						<div className="flex justify-between items-center mb-2 mx-2">
 							<Image
-								src="/products/product-1.png"
+								src={`/products/${item.imageUrl}`}
 								alt="Product"
 								width={80}
 								height={80}
@@ -100,9 +189,30 @@ export default function ProductGrid() {
 								<p className="text-gray-600 ">{item.category?.name}</p>
 								<p className="text-primary text-md font-bold ">${item.price}</p>
 							</div>
-							<button className="text-black hover:text-black font-bold   ">
-								...
-							</button>
+							<div className="relative">
+								<button
+									onClick={() => handleDropdownToggle(index)}
+									className="text-black hover:text-primary font-bold hover:font-extrabold px-2 "
+								>
+									...
+								</button>
+								{isDropdownOpen === index && (
+									<div className="absolute right-0   mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-20">
+										<button
+											onClick={() => handleEdit(item)}
+											className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+										>
+											Edit
+										</button>
+										<button
+											onClick={() => handleDelete(item.id)}
+											className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+										>
+											Delete
+										</button>
+									</div>
+								)}
+							</div>
 						</div>
 
 						<p className="text-sm text-gray-600">Summary</p>
@@ -146,6 +256,12 @@ export default function ProductGrid() {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				onSubmit={handleAddProduct}
+			/>
+			<ModalEditProduct
+				isOpen={isModalEditOpen}
+				onClose={() => setIsModalEditOpen(false)}
+				onSubmit={handleEditProduct}
+				product={currentProduct}
 			/>
 		</div>
 	);

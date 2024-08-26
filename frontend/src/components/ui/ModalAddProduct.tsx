@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import ModalAdd from "./ModalAddCategory";
 import ModalAddCategory from "./ModalAddCategory";
+import Image from "next/image";
 
 type ModalProps = {
 	isOpen: boolean;
@@ -12,15 +12,36 @@ type ModalProps = {
 };
 
 const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [productName, setProductName] = useState("");
 	const [category, setCategory] = useState("");
 	const [price, setPrice] = useState("");
 	const [description, setDescription] = useState("");
 	const [imageUrl, setImageUrl] = useState("");
 	const [stock, setStock] = useState("");
+	const [imageFile, setImageFile] = useState<File | null>(null);
+	const [imagePreview, setImagePreview] = useState<string>(
+		imageUrl ? `/products/${imageUrl}` : ""
+	);
 
-	const handleSubmit = (e: any) => {
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			setImageFile(file);
+			setImagePreview(URL.createObjectURL(file));
+		}
+	};
+
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
+		let imageUrl = imagePreview || "";
+		if (imageFile) {
+			// Handle image upload logic here
+			const filename = await uploadImage(imageFile);
+			console.log("Uploaded image: ", filename);
+
+			imageUrl = filename;
+		}
 		onSubmit({
 			name: productName,
 			category,
@@ -81,7 +102,18 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 		},
 	});
 
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const uploadImage = async (file: File): Promise<string> => {
+		// Implement the actual image upload logic here.
+		// For demonstration, we'll mock the behavior by returning just the filename.
+		return new Promise((resolve) => {
+			// Mock image upload and filename
+			setTimeout(() => {
+				// 			resolve(URL.createObjectURL(file));
+				const filename = file.name; // Replace with the actual filename returned from your server
+				resolve(filename);
+			}, 1000);
+		});
+	};
 
 	return (
 		<div>
@@ -111,18 +143,36 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 								required
 							/>
 						</div>
-						{/* //add image input here */}
+
 						<div className="mb-4">
 							<label className="block text-sm font-medium text-gray-700">
 								Product Image
 							</label>
+							{imagePreview && (
+								<Image
+									src={
+										imagePreview.startsWith("blob:")
+											? imagePreview
+											: `/products/${imagePreview}`
+									}
+									alt="Product Preview"
+									className="mb-2 w-full h-48 object-center rounded-md"
+									width={640}
+									height={48}
+								/>
+							)}
+
 							<input
 								type="file"
-								value={imageUrl}
-								onChange={(e) => setImageUrl(e.target.value)}
-								className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm "
-								required
-							/>{" "}
+								accept="image/*"
+								onChange={handleImageChange}
+								className="mt-1 block w-full text-sm text-gray-700
+                         file:mr-4 file:py-2 file:px-4
+                         file:rounded-3xl file:border-0
+                         file:text-sm file:font-semibold
+                         file:bg-primary file:text-white
+                         hover:file:bg-primary-dark"
+							/>
 						</div>
 
 						<div className="mb-4">

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import jwt_decode from "jwt-decode";
 
 import { useState } from "react";
+import { log } from "console";
 const Header = () => {
 	const router = useRouter();
 	const [userInfo, setUserInfo] = useState<{
@@ -64,7 +65,7 @@ const Header = () => {
 								</Link>
 							</li>
 							<li>
-								<Link href="/products" className="hover:underline">
+								<Link href="/product" className="hover:underline">
 									Products
 								</Link>
 							</li>

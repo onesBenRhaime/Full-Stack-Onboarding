@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Role } from '../role/entities/role.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -15,9 +15,9 @@ export class UserService {
     private readonly roleRepository: Repository<Role>,
   ) {}
 
-  async findByIdWithRoles(userId: number): Promise<User> {
+  async findByIdWithRoles(id: number): Promise<User> {
     return this.userRepository.findOne({
-      where: { id: userId },
+      where: { id: id },
       relations: ['roles'], // Inclure les rôles
     });
   }
@@ -36,8 +36,8 @@ export class UserService {
     return await this.userRepository.findOneBy({ id });
   }
 
-  async assignRole(userId: number, roleName: string): Promise<User> {
-    const user = await this.findOne(userId);
+  async assignRole(id: number, roleName: string): Promise<User> {
+    const user = await this.findOne(id);
     const role = await this.roleRepository.findOneBy({ name: roleName });
 
     if (!role) {
@@ -60,8 +60,8 @@ export class UserService {
   //   });
   // }
 
-  // async assignRole(userId: number, roleName: string): Promise<User> {
-  //   const user = await this.findOne(userId);
+  // async assignRole(id: number, roleName: string): Promise<User> {
+  //   const user = await this.findOne(id);
   //   const role = await this.roleRepository.findOneBy({ name: roleName });
 
   //   if (!role) {

@@ -23,4 +23,7 @@ export class Product {
 
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
+
+  @Column({ default: new Date() })
+  createdAt: Date;
 }

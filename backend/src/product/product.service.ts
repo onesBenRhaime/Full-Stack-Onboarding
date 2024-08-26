@@ -30,6 +30,7 @@ export class ProductService {
     const product = this.productRepository.create({
       ...createProductDto,
       category: category,
+      createdAt: new Date(),
     });
 
     return this.productRepository.save(product);
@@ -45,6 +46,13 @@ export class ProductService {
       relations: ['category'],
     });
   }
+  //get aall New Arrivals
+  async getNewArrivals(): Promise<Product[]> {
+    return this.productRepository.find({
+      order: { createdAt: 'DESC' },
+      take: 5,
+    });
+  }
 
   async update(
     id: number,
@@ -54,7 +62,8 @@ export class ProductService {
     return await this.productRepository.findOneBy({ id });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<string> {
     await this.productRepository.delete(id);
+    return 'Product deleted successfully';
   }
 }

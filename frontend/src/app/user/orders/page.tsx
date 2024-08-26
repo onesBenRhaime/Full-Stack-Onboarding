@@ -1,5 +1,5 @@
 import Header from "@/components/Header/Header";
-import HeaderSection from "@/components/Header/headerSection";
+import AllProducts from "@/components/Products/AllProducts";
 import Promo from "@/components/Products/promo";
 import Shopping from "@/components/Products/shoppingSection";
 import ShopLayout from "@/components/ShopLayout";
@@ -11,19 +11,10 @@ export const metadata: Metadata = {
 	// other metadata
 };
 
-export default function Home() {
+export default function MyOrders() {
 	return (
 		<>
-			<div className="bg-gray-50 text-gray-800 min-h-screen">
-				<ShopLayout />
-			</div>
-			{/* <div className="bg-secondary">
-				<Header />
-				<Hero />
-				<Promo />
-				<Shopping />
-				
-			</div> */}
+			<div className="bg-gray-50 text-gray-800 min-h-screen">dsd</div>
 		</>
 	);
 }

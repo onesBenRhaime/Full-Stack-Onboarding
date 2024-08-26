@@ -4,8 +4,8 @@ import { UserService } from './user.service';
 
 import { ProductModule } from '../product/product.module';
 import { RoleModule } from '../role/role.module';
-import { User } from './entities/user.entity';
 import { UserController } from './user.controller';
+import { User } from './user.entity';
 
 @Module({
   imports: [ProductModule, TypeOrmModule.forFeature([User]), RoleModule],
