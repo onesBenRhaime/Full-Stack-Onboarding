@@ -4,13 +4,12 @@ import Topbar from "@/components/Admin/Topbar";
 import ListUsers from "@/components/Users/ListUsers";
 import { useState } from "react";
 
-const [sidebarOpen, setSidebarOpen] = useState(false);
-
-const toggleSidebar = () => {
-	setSidebarOpen((prev) => !prev);
-};
-
 export default function Users() {
+	const [sidebarOpen, setSidebarOpen] = useState(false);
+
+	const toggleSidebar = () => {
+		setSidebarOpen((prev) => !prev);
+	};
 	return (
 		<>
 			<div className=" flex h-screen">
