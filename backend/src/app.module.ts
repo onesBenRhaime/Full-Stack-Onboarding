@@ -12,7 +12,8 @@ import { WishlistModule } from './wishlist/wishlist.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: 'postgres://default:fItLpgyb8R5Q@ep-purple-bread-a4ahcd9u-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require?sslmode=require', // Utilisez la variable d'environnement pour la chaîne de connexion
+      // url: 'postgres://default:fItLpgyb8R5Q@ep-purple-bread-a4ahcd9u.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require',
+      url: process.env.POSTGRES_URL,
       autoLoadEntities: true,
       synchronize: true,
       ssl: false,
