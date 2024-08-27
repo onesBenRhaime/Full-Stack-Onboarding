@@ -8,7 +8,6 @@ import React, {
 import Cookies from "js-cookie";
 import API_BASE_URL from "@/utils/config";
 
-// Define the shape of a product
 interface Product {
 	id: number;
 	name: string;
@@ -18,19 +17,17 @@ interface Product {
 	imageUrl: string;
 }
 
-// Define the context type
 interface WishlistContextType {
+	wishlistCount: number;
 	wishlist: Product[];
 	addToWishlist: (product: Product) => void;
 	removeFromWishlist: (productId: number) => void;
 	isInWishlist: (productId: number) => boolean;
 }
 
-// Create the context
 const WishlistContext = createContext<WishlistContextType | undefined>(
 	undefined
 );
-
 export const useWishlist = () => {
 	const context = useContext(WishlistContext);
 	if (!context) {
@@ -40,6 +37,7 @@ export const useWishlist = () => {
 };
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
+	let [wishlistCount, setWishlistCount] = useState<number>(0);
 	const [wishlist, setWishlist] = useState<Product[]>([]);
 
 	useEffect(() => {
@@ -54,18 +52,12 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 				const data = await response.json();
 				console.log(data);
 
-				// Transform the data to match the expected shape
 				if (data && Array.isArray(data.items)) {
 					const transformedWishlist = data.items.map(
 						(item: any) => item.product
 					);
 					setWishlist(transformedWishlist);
-					// console.log("transformedWishlist :", transformedWishlist);
-					// console.log(
-					// 	"id for item to delete  :",
-					// 	// transformedWishlist?.items[0]?.id
-					// 	transformedWishlist[0].id
-					// );
+					setWishlistCount(transformedWishlist.length);
 				} else {
 					console.error("Invalid wishlist data", data);
 					setWishlist([]);
@@ -85,7 +77,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 			const response = await fetch(`${API_BASE_URL}wishlist/add`, {
 				method: "POST",
 				headers: {
-					Authorization: `Bearer ${token}`, // Add the token to the headers
+					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({ productId: product.id }),
@@ -134,9 +126,17 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 		);
 	};
 
+	//need to get the wishlist content length to display in the header
+
 	return (
 		<WishlistContext.Provider
-			value={{ wishlist, addToWishlist, removeFromWishlist, isInWishlist }}
+			value={{
+				wishlistCount,
+				wishlist,
+				addToWishlist,
+				removeFromWishlist,
+				isInWishlist,
+			}}
 		>
 			{children}
 		</WishlistContext.Provider>

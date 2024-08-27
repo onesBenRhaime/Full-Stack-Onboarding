@@ -1,43 +1,24 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/Context/CartContext";
 import { useAuth } from "@/Context/AuthContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useWishlist } from "@/Context/WishlistContext";
 
 const HeaderSection = () => {
-	const [isClient, setIsClient] = useState(false);
-	const [isAdminRoute, setIsAdminRoute] = useState(false);
+	const router = useRouter();
 	const { user, logout } = useAuth();
+	const { wishlistCount } = useWishlist();
 	const { cartCount } = useCart();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-	useEffect(() => {
-		// Check if we are on the client-side
-		setIsClient(true);
-	}, []);
-
-	useEffect(() => {
-		if (isClient) {
-			const router = useRouter();
-			// Check if the current route includes "/admin"
-			if (router.pathname.includes("/admin")) {
-				setIsAdminRoute(true);
-			} else {
-				setIsAdminRoute(false);
-			}
-		}
-	}, [isClient]);
-
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-	if (!isClient) return null; // Don't render the component on the server
 
 	return (
 		<>
-			{/* Header */}
-			<header className={`bg-white shadow ${isAdminRoute ? "hidden" : ""}`}>
+			<header className={`bg-white shadow`}>
 				<div className="container mx-auto flex justify-between items-center py-4 px-6">
 					<div className="flex justify-start rounded-3xl p-4 ">
 						<Image
@@ -102,7 +83,7 @@ const HeaderSection = () => {
 										href="/wishlist"
 										className="text-gray-600 hover:text-gray-800 hover:underline"
 									>
-										Wishlist
+										Wishlist ({wishlistCount})
 									</Link>
 
 									<Link
