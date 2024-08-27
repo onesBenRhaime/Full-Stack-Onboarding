@@ -13,13 +13,7 @@ import PleaseLogIn from "../PleaseLogIn";
 
 const YourCart = () => {
 	const { user } = useAuth();
-	if (!user) {
-		return (
-			<div>
-				<PleaseLogIn />
-			</div>
-		); // Ou rediriger l'utilisateur
-	}
+
 	const { cartCount, clearCartCount } = useCart();
 	const token = Cookies.get("authToken");
 	const router = useRouter();
@@ -143,7 +137,13 @@ const YourCart = () => {
 			console.error("Failed to clear cart:", error);
 		}
 	};
-
+	if (!user) {
+		return (
+			<div>
+				<PleaseLogIn />
+			</div>
+		); // Ou rediriger l'utilisateur
+	}
 	return (
 		<>
 			<section className="pt-28">

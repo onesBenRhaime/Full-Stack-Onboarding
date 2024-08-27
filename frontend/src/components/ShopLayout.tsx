@@ -1,15 +1,26 @@
 import React from "react";
 import TestimonialCard from "./TestimonialCard";
 import Newsletter from "./Newsletter";
-import HeroSection from "./Hero/HeroSection";
 import NewArrivalsSection from "./Products/NewArrivalsSection";
+
 const ShopLayout = () => {
 	return (
 		<div>
 			{/* Main Content */}
 			<div className="container mx-auto p-6">
 				{/* Hero Section */}
-				<HeroSection />
+				{/* Hero Section */}
+				<section className="bg-white shadow rounded-lg p-6 mb-8 text-center">
+					<div
+						className="bg-gray-200 rounded-md mb-4 relative flex items-center justify-center"
+						style={{
+							backgroundImage: "url('/images/hero-3.png')",
+							backgroundSize: "cover",
+							height: "300px",
+							backgroundPosition: "center",
+						}}
+					></div>
+				</section>
 				<NewArrivalsSection />
 				{/* Testimonials */}
 				<section className="mb-8 pt-20">
@@ -24,7 +35,6 @@ const ShopLayout = () => {
 					<Newsletter />
 				</div>
 			</div>
-		
 		</div>
 	);
 };
