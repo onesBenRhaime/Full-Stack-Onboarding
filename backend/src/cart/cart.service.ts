@@ -20,65 +20,13 @@ export class CartService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
-  // async getCart(user: User): Promise<Cart> {
-  //   // return les cart dans un json avec les items et les produits
-  //   const data = this.cartRepository.findOne({
-  //     where: { user },
-  //     relations: ['items', 'items.product'],
-  //   });
-  //   console.log('from service : ');
 
-  //   return data;
-  // }
-
-  // async addItemToCart(
-  //   user: User,
-  //   productId: number,
-  //   quantity: number,
-  // ): Promise<Cart> {
-  //   console.log('from service : ', user);
-
-  //   const cart = await this.getCart(user);
-  //   const product = await this.productRepository.findOne({
-  //     where: { id: productId },
-  //   });
-
-  //   if (!product) {
-  //     throw new NotFoundException('Product not found');
-  //   }
-
-  //   let cartItem = await this.cartItemRepository.findOne({
-  //     where: { cart, product },
-  //   });
-
-  //   if (cartItem) {
-  //     cartItem.quantity += quantity;
-  //   } else {
-  //     cartItem = this.cartItemRepository.create({ cart, product, quantity });
-  //   }
-
-  //   await this.cartItemRepository.save(cartItem);
-  //   return this.getCart(user);
-  // }
-
-  // async removeItemFromCart(user: User, cartItemId: number): Promise<Cart> {
-  //   const cartItem = await this.cartItemRepository.findOne({
-  //     where: { id: cartItemId },
-  //     relations: ['cart'],
-  //   });
-
-  //   if (!cartItem || cartItem.cart.user.id !== user.id) {
-  //     throw new UnauthorizedException('You cannot remove this item');
-  //   }
-
-  //   await this.cartItemRepository.remove(cartItem);
-  //   return this.getCart(user);
-  // }
   async getCart(user: User): Promise<Cart> {
     const cart = await this.cartRepository.findOne({
       where: { user },
       relations: ['items', 'items.product'],
     });
+    console.log('cart : ', cart);
 
     if (!cart) {
       throw new NotFoundException('Cart not found for this user.');

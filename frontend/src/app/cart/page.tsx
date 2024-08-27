@@ -1,4 +1,6 @@
 import YourCart from "@/components/Cart/YourCart";
+import Footer from "@/components/Footer";
+import HeaderSection from "@/components/Header/headerSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,9 +12,12 @@ export const metadata: Metadata = {
 export default function Cart() {
 	return (
 		<>
+			
+			<HeaderSection />
 			<div className="bg-gray-50 text-gray-800 min-h-screen">
 				<YourCart />
-			</div>
+			</div>{" "}
+			<Footer />
 		</>
 	);
 }

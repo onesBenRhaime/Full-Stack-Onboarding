@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import HeaderSection from "@/components/Header/headerSection";
-import AllProducts from "@/components/Products/AllProducts";
+import Wishlist from "@/components/Wishlist";
 
 import { Metadata } from "next";
 
@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 	// other metadata
 };
 
-export default function Products() {
+export default function Index() {
 	return (
 		<>
 			<HeaderSection />
 			<div className="bg-gray-50 text-gray-800 min-h-screen">
-				<AllProducts />
+				<Wishlist />
 			</div>
 			<Footer />
 		</>

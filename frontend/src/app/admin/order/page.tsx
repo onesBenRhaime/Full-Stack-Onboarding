@@ -1,16 +1,20 @@
+"use client";
+
+import AccessDenied from "@/components/AccessDenied";
 import Sidebar from "@/components/Admin/Sidebar";
 import Topbar from "@/components/Admin/Topbar";
-import ListOrder from "@/components/Orders/ListOrders";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-	title: "Dashboard E-Commerce ",
-	description: "This is Website for E-Commerce Fullstack onboarding Project",
-};
+import MyOrders from "@/components/Orders/MyOrders";
+import { useAuth } from "@/Context/AuthContext";
 
 export default function Orders() {
-
-
+	const { user } = useAuth();
+	if (!user?.role.includes("admin")) {
+		return (
+			<div>
+				<AccessDenied />
+			</div>
+		);
+	}
 	return (
 		<>
 			<div className=" flex h-screen">
@@ -20,8 +24,8 @@ export default function Orders() {
 					<Topbar />
 					<div className=" bg-gray-100 flex-1 p-4">
 						<div className="flex-1 p-4">
-							<h1>Orders</h1>
-							<ListOrder />
+							<h1>My Orders </h1>
+							<MyOrders />
 						</div>
 					</div>
 				</div>

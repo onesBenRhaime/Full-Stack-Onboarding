@@ -105,7 +105,6 @@ export default function ProductGrid() {
 			});
 			setTimeout(() => {
 				setAlertMessage(null);
-				window.location.reload();
 			}, 1000);
 		},
 		onError: (error) => {

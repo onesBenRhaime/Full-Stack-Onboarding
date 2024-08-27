@@ -1,7 +1,5 @@
-import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer";
 import HeaderSection from "@/components/Header/headerSection";
-import Promo from "@/components/Products/promo";
-import Shopping from "@/components/Products/shoppingSection";
 import ShopLayout from "@/components/ShopLayout";
 import { Metadata } from "next";
 
@@ -14,6 +12,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
 		<>
+			<HeaderSection />
 			<div className="bg-gray-50 text-gray-800 min-h-screen">
 				<ShopLayout />
 			</div>
@@ -23,7 +22,9 @@ export default function Home() {
 				<Promo />
 				<Shopping />
 				
+			
 			</div> */}
+			<Footer />
 		</>
 	);
 }

@@ -5,9 +5,11 @@ import Image from "next/image";
 import { useState } from "react";
 import Toast from "../ui/Toast";
 import Cookies from "js-cookie";
+import { useCart } from "@/Context/CartContext";
 
 const CartItem = ({ item }: { item: any }) => {
 	const [quantity, setQuantity] = useState(item.quantity);
+	const { deleteFromCart: deleteFromCart } = useCart();
 	const token = Cookies.get("authToken");
 	const [alertMessage, setAlertMessage] = useState<{
 		title: string;
@@ -37,7 +39,7 @@ const CartItem = ({ item }: { item: any }) => {
 			});
 			setTimeout(() => {
 				setAlertMessage(null);
-				window.location.reload();
+			
 			}, 1000);
 		},
 		onError: (error) => {
@@ -52,6 +54,7 @@ const CartItem = ({ item }: { item: any }) => {
 
 	const handleDeleteItem = async (productId: number) => {
 		try {
+			deleteFromCart();
 			await removeMutation.mutateAsync(productId);
 		} catch (error) {
 			console.error("Failed to delete product:", error);
@@ -87,7 +90,6 @@ const CartItem = ({ item }: { item: any }) => {
 			});
 			setTimeout(() => {
 				setAlertMessage(null);
-				window.location.reload();
 			}, 1000);
 		},
 		onError: (error) => {

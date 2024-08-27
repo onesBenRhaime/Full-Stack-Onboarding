@@ -1,65 +1,23 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import Cookies from "js-cookie";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import jwt_decode from "jwt-decode";
-
-import { useState } from "react";
+import { useCart } from "@/Context/CartContext";
+import { useAuth } from "@/Context/AuthContext";
 const HeaderSection = () => {
 	const router = useRouter();
-	const [userInfo, setUserInfo] = useState<{
-		username: string;
-		role: Array<string>;
-	} | null>(null);
-	const { data: token } = useQuery({
-		queryKey: ["authToken"],
-		queryFn: () => {
-			const token = Cookies.get("authToken");
-			if (token) {
-				const decodedToken: { username: string; role: Array<string> } =
-					jwt_decode(token);
-				// localStorage.setItem("role", decodedToken.role.join(","));
-				// localStorage.setItem("username", decodedToken.username);
+	const { user, logout } = useAuth();
 
-				setUserInfo({
-					username: decodedToken.username,
-					role: decodedToken.role,
-				});
-			}
-			return token;
-		},
-		staleTime: Infinity,
-	});
+	const { cartCount } = useCart();
 
-	const handleLogout = () => {
-		Cookies.remove("authToken");
-		router.push("/auth/login");
-	};
-
-	const getnbItemsInCart = async () => {
-		const response = await fetch("http://localhost:5000/cart", {
-			headers: { Authorization: `Bearer ${token}` },
-		});
-		const data = await response.json();
-		console.log(data.items.length);
-		const nb = data.items.length;
-		if (!response.ok) {
-			throw new Error("Network response  problem");
-		}
-		return nb;
-	};
-
-	const { data: nb } = useQuery({
-		queryKey: ["nbItemsInCart"],
-		queryFn: getnbItemsInCart,
-		staleTime: Infinity,
-	});
 	return (
 		<>
 			{/* Header */}
-			<header className="bg-white shadow">
+			<header
+				className={`bg-white shadow ${
+					user?.role.includes("admin") ? "hidden" : ""
+				}`}
+			>
 				<div className="container mx-auto flex justify-between items-center py-4 px-6">
 					{/*  border-collapse border-2  */}
 					<div className="flex  justify-start rounded-3xl p-4 ">
@@ -76,32 +34,42 @@ const HeaderSection = () => {
 					</div>
 					<div className=" flex justify-end ">
 						<nav className="space-x-4  py-2 px-8">
-							<a href="#" className="text-gray-600 hover:text-gray-800">
-								About
-							</a>
+							<Link
+								href="/"
+								className="text-gray-600 hover:text-gray-800  hover:underline "
+							>
+								Home
+							</Link>
 							<Link
 								href="/products"
-								className="text-gray-600 hover:text-gray-800"
+								className="text-gray-600 hover:text-gray-800 hover:underline "
 							>
 								Shop
 							</Link>
-							<a href="#" className="text-gray-600 hover:text-gray-800">
-								Help
-							</a>
-							<a href="#" className="text-gray-600 hover:text-gray-800">
+
+							<Link
+								href="/wishlist"
+								className="text-gray-600 hover:text-gray-800 hover:underline "
+							>
+								Wishlist
+							</Link>
+							<Link
+								href="#"
+								className="text-gray-600 hover:text-gray-800 hover:underline "
+							>
 								Profile
-							</a>
-							{token && (
+							</Link>
+							{user && (
 								<button
-									onClick={handleLogout}
-									className="text-gray-600 hover:text-gray-800"
+									onClick={logout}
+									className="text-gray-600 hover:text-gray-800  hover:border-collapse hover:border  hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
 								>
 									Logout
 								</button>
 							)}
 						</nav>{" "}
 						<div className="relative">
-							{token ? (
+							{user ? (
 								<div className="flex  justify-between rounded-3xl border-collapse border-2 ps-4 py-2 ">
 									<Image
 										src="/icons/shopping-cart.png"
@@ -110,13 +78,19 @@ const HeaderSection = () => {
 										height={15}
 										alt=""
 									/>
-									<Link
-										href="/cart"
+									<button
+										onClick={() => {
+											cartCount == 0
+												? alert(
+														"you Should add products to your cart then proceed to it "
+												  )
+												: router.push("/cart");
+										}}
 										className="text-gray-600 hover:text-gray-800 px-4 font-bold text-xl"
 									>
 										Your cart
-										<span className="text-red-600">({nb ? nb : 0})</span>
-									</Link>
+										<span className="text-red-600 me-1">({cartCount})</span>
+									</button>
 								</div>
 							) : (
 								<div className="flex  justify-between  space-x-4 ">

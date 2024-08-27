@@ -5,13 +5,15 @@ import Image from "next/image";
 import { useState } from "react";
 import Toast from "../ui/Toast";
 import Cookies from "js-cookie";
+import { useCart } from "@/Context/CartContext";
+import { useWishlist } from "../../Context/WishlistContext";
 
 const ProductCard = ({
-	hot = false,
 	product,
+	onProductUpdate,
 }: {
-	hot?: boolean;
 	product: any;
+	onProductUpdate: (updatedProduct: any) => void;
 }) => {
 	const token = Cookies.get("authToken");
 	const [alertMessage, setAlertMessage] = useState<{
@@ -19,11 +21,13 @@ const ProductCard = ({
 		description: string;
 		variant: "success" | "error" | "info" | "warning";
 	} | null>(null);
-	const addToCart = async (product: any) => {
+
+	const { addToCart: cartAddToCart } = useCart();
+	const addProductToCart = async (id: any) => {
 		const response = await axios.post(
 			"http://localhost:5000/cart/add",
 			{
-				productId: product.id,
+				productId: id,
 				quantity: 1,
 			},
 			{
@@ -38,16 +42,21 @@ const ProductCard = ({
 	};
 
 	const mutation = useMutation({
-		mutationFn: addToCart,
-		onSuccess: () => {
+		mutationFn: addProductToCart,
+		onSuccess: (updatedProduct) => {
 			setAlertMessage({
-				title: "item  Added to cart",
+				title: "Item Added to Cart",
 				description: "Product has been added successfully.",
 				variant: "success",
 			});
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 5000);
+
+			// to update the product in the parent component
+			console.log("updatedProduct", updatedProduct);
+
+			onProductUpdate(updatedProduct);
 		},
 		onError: (error: Error) => {
 			let errorMessage = "Failed to add product to cart.";
@@ -64,17 +73,18 @@ const ProductCard = ({
 	});
 
 	const handleAddToCart = async (product: any) => {
-		console.log("handleAddToCart", product);
-
 		try {
+			await cartAddToCart();
 			await mutation.mutateAsync(product);
 		} catch (error) {
 			console.error("Failed to add product:", error);
 		}
 	};
+	//woshlist :
 
+	const { addToWishlist, isInWishlist } = useWishlist();
 	return (
-		<div className="bg-white shadow rounded-lg p-4">
+		<div className="bg-white shadow rounded-xl p-4">
 			{alertMessage && (
 				<div className="fixed bottom-4 top-20 right-4  ">
 					<Toast
@@ -86,7 +96,7 @@ const ProductCard = ({
 			)}
 			<div className="bg-gray-200 h-40 rounded-md mb-4">
 				<Image
-					src={`/products/${product.imageUrl}`}
+					src={`/products/${product.imageUrl}` || "/products/default-image.png"}
 					alt="Product"
 					width={300}
 					height={300}
@@ -96,29 +106,23 @@ const ProductCard = ({
 			<h3 className="text-sm font-semibold uppercase">{product.name}</h3>
 			<p className="text-xs text-gray-600 mb-2">{product.description}</p>
 			<p className="text-lg font-bold">
-				{hot ? (
-					<>
-						<span className="text-red-600">Now €{product.price}</span>
-						<span className="text-gray-500 line-through">
-							Was €89.99 (-79%)
-						</span>
-					</>
-				) : (
-					<span>€{product.price}</span>
-				)}
+				<span>€{product.price}</span>
 			</p>
-			<div className="flex space-x-2 mt-4">
+			<div className="flex space-x-4 mt-4">
 				<button
-					className="flex-1 bg-black text-white rounded-lg px-4 py-2"
-					onClick={handleAddToCart}
+					className=" bg-black text-white rounded-lg px-2 py-1"
+					onClick={() => handleAddToCart(product.id)}
 				>
 					Add to Cart
 				</button>
-				{!hot && (
-					<button className="flex-1 bg-gray-200 text-black rounded-lg px-4 py-2">
-						Save for later
-					</button>
-				)}
+
+				<button
+					className=" bg-gray-200 text-black rounded-lg px-2 py-1"
+					onClick={() => addToWishlist(product)}
+					disabled={isInWishlist(product.id)}
+				>
+					{isInWishlist(product.id) ? "In Wishlist" : "Save for later"}
+				</button>
 			</div>
 		</div>
 	);

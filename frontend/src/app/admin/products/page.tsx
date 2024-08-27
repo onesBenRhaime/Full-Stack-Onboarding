@@ -1,8 +1,18 @@
 "use client";
+import AccessDenied from "@/components/AccessDenied";
 import Sidebar from "@/components/Admin/Sidebar";
 import Topbar from "@/components/Admin/Topbar";
 import ProductGrid from "@/components/Products/productGrid";
+import { useAuth } from "@/Context/AuthContext";
 const Products = () => {
+	const { user } = useAuth();
+	if (!user?.role.includes("admin")) {
+		return (
+			<div>
+				<AccessDenied />
+			</div>
+		); // Ou rediriger l'utilisateur
+	}
 	return (
 		<>
 			<div className=" flex h-screen">

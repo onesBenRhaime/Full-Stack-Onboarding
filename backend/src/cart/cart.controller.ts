@@ -23,8 +23,6 @@ export class CartController {
 
   @Get()
   getCart(@Req() req): Promise<Cart> {
-    console.log('get cart by user : ', req.user);
-
     return this.cartService.getCart(req.user as User);
   }
 
@@ -62,5 +60,11 @@ export class CartController {
       cartItemId,
       editItemDto.quantity,
     );
+  }
+  //clear cart of user
+  @Delete('clear')
+  clearCart(@Req() req): Promise<string> {
+    this.cartService.clearCart(req.user as User);
+    return Promise.resolve('Cart cleared');
   }
 }

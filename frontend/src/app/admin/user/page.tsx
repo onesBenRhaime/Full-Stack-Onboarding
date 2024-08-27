@@ -1,7 +1,5 @@
 import Sidebar from "@/components/Admin/Sidebar";
 import Topbar from "@/components/Admin/Topbar";
-import ProductGrid from "@/components/Products/productGrid";
-import Shopping from "@/components/Products/shoppingSection";
 import ListUsers from "@/components/Users/ListUsers";
 import { Metadata } from "next";
 

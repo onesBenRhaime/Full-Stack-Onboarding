@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const NewArrivalsSection = () => {
 	const fetchProducts = async () => {
@@ -13,11 +14,20 @@ const NewArrivalsSection = () => {
 		return response.json();
 	};
 
-	const { data: products } = useQuery({
+	const { data: initialProducts } = useQuery({
 		queryKey: ["products"],
 		queryFn: fetchProducts,
 		staleTime: Infinity,
 	});
+	const [products, setProducts] = useState(initialProducts);
+
+	const handleProductUpdate = (updatedProduct: any) => {
+		setProducts((prevProducts: any) =>
+			prevProducts.map((product: any) =>
+				product.id === updatedProduct.id ? updatedProduct : product
+			)
+		);
+	};
 
 	return (
 		<>
@@ -46,7 +56,7 @@ const NewArrivalsSection = () => {
 				<div className="flex justify-between items-center mb-4">
 					<h2 className="text-xl font-semibold">New Arrivals</h2>
 					<Link
-						href=""
+						href="/products"
 						className="text-sm text-gray-600 hover:text-white  hover:font-bold hover:bg-black border-collapse border  rounded-full px-4 py-2"
 					>
 						View all
@@ -54,7 +64,11 @@ const NewArrivalsSection = () => {
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 					{products?.map((item: any, index: any) => (
-						<ProductCard product={item} />
+						<ProductCard
+							key={index}
+							product={item}
+							onProductUpdate={handleProductUpdate}
+						/>
 					))}
 				</div>
 			</section>
