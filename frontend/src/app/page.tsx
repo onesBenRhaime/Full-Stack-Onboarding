@@ -16,14 +16,7 @@ export default function Home() {
 			<div className="bg-gray-50 text-gray-800 min-h-screen">
 				<ShopLayout />
 			</div>
-			{/* <div className="bg-secondary">
-				<Header />
-				<Hero />
-				<Promo />
-				<Shopping />
-				
-			
-			</div> */}
+
 			<Footer />
 		</>
 	);

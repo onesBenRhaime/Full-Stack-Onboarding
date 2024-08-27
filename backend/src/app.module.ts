@@ -12,13 +12,10 @@ import { WishlistModule } from './wishlist/wishlist.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1234',
-      database: 'postgres',
+      url: 'postgres://default:fItLpgyb8R5Q@ep-purple-bread-a4ahcd9u-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require?sslmode=require', // Utilisez la variable d'environnement pour la chaîne de connexion
       autoLoadEntities: true,
       synchronize: true,
+      ssl: false,
     }),
     UserModule,
     AuthModule,
