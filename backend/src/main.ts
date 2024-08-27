@@ -10,14 +10,16 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://full-stack-onboarding-back.vercel.app',
+      'https://full-stack-onboarding.vercel.app/',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
     credentials: true,
   });
 
-  await app.listen(process.env.PORT || 5000);
+  await app.listen(process.env.PORT || 5000, () => {
+    console.log('Server is running on port', process.env.PORT || 5000);
+  });
 }
 
 bootstrap();
