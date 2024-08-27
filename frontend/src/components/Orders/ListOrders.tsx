@@ -1,4 +1,5 @@
 "use client";
+import API_BASE_URL from "@/utils/config";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -8,7 +9,7 @@ export default function ListOrder() {
 	const token = Cookies.get("authToken");
 	const fetchProducts = async () => {
 		//use axios to fetch data from the server
-		const response = await axios.get("http://localhost:5000/orders/all", {
+		const response = await axios.get(`${API_BASE_URL}orders/all`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

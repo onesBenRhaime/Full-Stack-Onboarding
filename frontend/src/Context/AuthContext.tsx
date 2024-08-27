@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import API_BASE_URL from "@/utils/config";
 
 interface User {
 	username: string;
@@ -36,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const login = async (email: string, password: string) => {
 		try {
-			const response = await axios.post("http://localhost:5000/auth/login", {
+			const response = await axios.post(`${API_BASE_URL}auth/login`, {
 				email,
 				password,
 			});

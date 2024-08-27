@@ -6,6 +6,7 @@ import React, {
 	ReactNode,
 } from "react";
 import Cookies from "js-cookie";
+import API_BASE_URL from "@/utils/config";
 
 // Define the shape of a product
 interface Product {
@@ -45,7 +46,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 		const fetchWishlist = async () => {
 			try {
 				const token = Cookies.get("authToken");
-				const response = await fetch("http://localhost:5000/wishlist", {
+				const response = await fetch(`${API_BASE_URL}wishlist`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -81,7 +82,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 	const addToWishlist = async (product: Product) => {
 		try {
 			const token = Cookies.get("authToken"); // Get the token from cookies
-			const response = await fetch("http://localhost:5000/wishlist/add", {
+			const response = await fetch(`${API_BASE_URL}wishlist/add`, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`, // Add the token to the headers

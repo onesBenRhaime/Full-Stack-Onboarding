@@ -7,6 +7,7 @@ import Toast from "../ui/Toast";
 import Cookies from "js-cookie";
 import { useCart } from "@/Context/CartContext";
 import { useWishlist } from "../../Context/WishlistContext";
+import API_BASE_URL from "@/utils/config";
 
 const ProductCard = ({
 	product,
@@ -25,7 +26,7 @@ const ProductCard = ({
 	const { addToCart: cartAddToCart } = useCart();
 	const addProductToCart = async (id: any) => {
 		const response = await axios.post(
-			"http://localhost:5000/cart/add",
+			`${API_BASE_URL}cart/add`,
 			{
 				productId: id,
 				quantity: 1,

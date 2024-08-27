@@ -3,10 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import API_BASE_URL from "@/utils/config";
 
 const Sidebar = () => {
 	const fetchcategorys = async () => {
-		const response = await fetch("http://localhost:5000/categories"); // Remplacez par votre endpoint API
+		const response = await fetch(`${API_BASE_URL}categories`); // Remplacez par votre endpoint API
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}

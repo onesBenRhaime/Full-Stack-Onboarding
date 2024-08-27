@@ -10,6 +10,7 @@ import Toast from "@/components/ui/Toast";
 import * as Yup from "yup";
 import { Router } from "next/router";
 import { useRouter } from "next/navigation";
+import API_BASE_URL from "@/utils/config";
 
 const schema = Yup.object({
 	username: Yup.string().required("Username is required"),
@@ -39,8 +40,7 @@ export default function Register() {
 		variant: "success" | "error" | "info" | "warning";
 	} | null>(null);
 	const mutation = useMutation({
-		mutationFn: (data: any) =>
-			axios.post("http://localhost:5000/auth/register", data),
+		mutationFn: (data: any) => axios.post(`${API_BASE_URL}auth/register`, data),
 		onSuccess: (data) => {
 			if (data.status === 401) {
 				setAlertMessage({

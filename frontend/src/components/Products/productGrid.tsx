@@ -7,6 +7,7 @@ import Toast from "../ui/Toast";
 import ModalEditProduct from "../ui/ModalEditProduct";
 import { Product } from "../../../types/product";
 import { useState } from "react";
+import API_BASE_URL from "@/utils/config";
 
 export default function ProductGrid() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
@@ -19,7 +20,7 @@ export default function ProductGrid() {
 		variant: "success" | "error" | "info" | "warning";
 	} | null>(null);
 	const fetchProducts = async () => {
-		const response = await fetch("http://localhost:5000/products");
+		const response = await fetch(`${API_BASE_URL}products`);
 		if (!response.ok) {
 			throw new Error("Network response  problem");
 		}
@@ -33,23 +34,18 @@ export default function ProductGrid() {
 	});
 
 	const addProduct = async (product: any) => {
-		const response = await axios.post(
-			"http://localhost:5000/products",
-			product
-		);
+		const response = await axios.post(`${API_BASE_URL}products`, product);
 		return response.data;
 	};
 	const editProduct = async (product: any) => {
 		const response = await axios.patch(
-			`http://localhost:5000/products/${product.id}`,
+			`${API_BASE_URL}products/${product.id}`,
 			product
 		);
 		return response.data;
 	};
 	const removeProduct = async (productId: number) => {
-		const response = await axios.delete(
-			`http://localhost:5000/products/${productId}`
-		);
+		const response = await axios.delete(`${API_BASE_URL}products/${productId}`);
 		return response.data;
 	};
 

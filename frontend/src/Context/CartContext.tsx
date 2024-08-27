@@ -4,6 +4,7 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import Cookies from "js-cookie";
+import API_BASE_URL from "@/utils/config";
 interface CartContextType {
 	cartCount: number;
 	addToCart: () => Promise<void>; // Update this line
@@ -19,7 +20,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		const fetchCartData = async () => {
 			try {
 				const token = Cookies.get("authToken");
-				const response = await axios.get("http://localhost:5000/cart", {
+				const response = await axios.get(`${API_BASE_URL}cart`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},

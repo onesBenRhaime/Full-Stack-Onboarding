@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useCart } from "@/Context/CartContext";
 import { useAuth } from "@/Context/AuthContext";
 import PleaseLogIn from "../PleaseLogIn";
+import API_BASE_URL from "@/utils/config";
 
 const YourCart = () => {
 	const { user } = useAuth();
@@ -26,7 +27,7 @@ const YourCart = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const fetchUserCart = async () => {
-		const response = await fetch("http://localhost:5000/cart", {
+		const response = await fetch(`${API_BASE_URL}cart`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
@@ -46,7 +47,7 @@ const YourCart = () => {
 
 	const placeOrder = async () => {
 		const response = await axios.post(
-			"http://localhost:5000/orders",
+			`${API_BASE_URL}orders`,
 			{
 				method: paymentMethod,
 			},
@@ -60,7 +61,7 @@ const YourCart = () => {
 	};
 
 	const clearCart = async () => {
-		const response = await axios.delete("http://localhost:5000/cart/clear", {
+		const response = await axios.delete(`${API_BASE_URL}cart/clear`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

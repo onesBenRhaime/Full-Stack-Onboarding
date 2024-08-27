@@ -54,7 +54,9 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 	};
 
 	const fetchCategories = async () => {
-		const response = await fetch("http://localhost:5000/categories");
+		const response = await fetch(
+			"https://full-stack-onboarding-back.vercel.app/categories"
+		);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -74,7 +76,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 
 	const addCategory = async (category: any) => {
 		const response = await axios.post(
-			"http://localhost:5000/categories",
+			"https://full-stack-onboarding-back.vercel.app/categories",
 			category
 		);
 		return response.data;

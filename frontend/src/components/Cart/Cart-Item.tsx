@@ -6,6 +6,7 @@ import { useState } from "react";
 import Toast from "../ui/Toast";
 import Cookies from "js-cookie";
 import { useCart } from "@/Context/CartContext";
+import API_BASE_URL from "@/utils/config";
 
 const CartItem = ({ item }: { item: any }) => {
 	const [quantity, setQuantity] = useState(item.quantity);
@@ -19,7 +20,7 @@ const CartItem = ({ item }: { item: any }) => {
 
 	const removeProduct = async (productId: number) => {
 		const response = await axios.delete(
-			`http://localhost:5000/cart/remove/${productId}`,
+			`${API_BASE_URL}cart/remove/${productId}`,
 			{
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -39,7 +40,6 @@ const CartItem = ({ item }: { item: any }) => {
 			});
 			setTimeout(() => {
 				setAlertMessage(null);
-			
 			}, 1000);
 		},
 		onError: (error) => {
@@ -69,7 +69,7 @@ const CartItem = ({ item }: { item: any }) => {
 		quantity: number;
 	}) => {
 		const response = await axios.patch(
-			`http://localhost:5000/cart/edit/${productId}`,
+			`${API_BASE_URL}cart/edit/${productId}`,
 			{ quantity },
 			{
 				headers: {

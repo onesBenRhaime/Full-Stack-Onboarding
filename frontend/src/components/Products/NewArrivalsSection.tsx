@@ -4,10 +4,11 @@ import Link from "next/link";
 import ProductCard from "./ProductCard";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import API_BASE_URL from "@/utils/config";
 
 const NewArrivalsSection = () => {
 	const fetchProducts = async () => {
-		const response = await fetch("http://localhost:5000/products/newArrivals");
+		const response = await fetch(`${API_BASE_URL}products/newArrivals`);
 		if (!response.ok) {
 			throw new Error("Network response  problem");
 		}

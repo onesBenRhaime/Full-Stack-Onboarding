@@ -3,10 +3,11 @@ import Image from "next/image";
 import ProductCard from "./ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import API_BASE_URL from "@/utils/config";
 
 const AllProducts = () => {
 	const fetchProducts = async () => {
-		const response = await fetch("http://localhost:5000/products");
+		const response = await fetch(`${API_BASE_URL}products`);
 		if (!response.ok) {
 			throw new Error("Network response problem");
 		}

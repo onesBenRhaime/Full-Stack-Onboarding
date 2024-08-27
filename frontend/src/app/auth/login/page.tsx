@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Toast from "@/components/ui/Toast";
 import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
+import API_BASE_URL from "@/utils/config";
 const schema = Yup.object({
 	username: Yup.string().required("UserName is required"),
 	password: Yup.string().required("Password is required"),
@@ -29,8 +30,7 @@ export default function Login() {
 	const router = useRouter();
 
 	const mutation = useMutation({
-		mutationFn: (data: any) =>
-			axios.post("http://localhost:5000/auth/login", data),
+		mutationFn: (data: any) => axios.post(`${API_BASE_URL}auth/login`, data),
 		onSuccess: (data) => {
 			const token = data?.data?.access_token;
 
