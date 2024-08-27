@@ -51,4 +51,11 @@ export class UserController {
   async assignRole(@Param('id') id: number, @Body('role') role: string) {
     return await this.userService.assignRole(id, role);
   }
+
+  // for ban
+  @Post(':id/ban')
+  @Roles('admin')
+  async ban(@Param('id') id: number) {
+    return await this.userService.banUser(id);
+  }
 }

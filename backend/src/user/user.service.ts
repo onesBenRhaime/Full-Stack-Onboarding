@@ -26,7 +26,7 @@ export class UserService {
     const user = this.userRepository.create(createUserDto);
 
     //user par defaut
-    const role = await this.roleRepository.findOneBy({ name: 'admin' });
+    const role = await this.roleRepository.findOneBy({ name: 'user' });
     user.roles = [role];
 
     return await this.userRepository.save(user);
@@ -53,25 +53,6 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  // async findOne(id: number): Promise<User> {
-  //   return await this.userRepository.findOne({
-  //     where: { id },
-  //     relations: ['roles'], // Assurez-vous que les rôles sont chargés
-  //   });
-  // }
-
-  // async assignRole(id: number, roleName: string): Promise<User> {
-  //   const user = await this.findOne(id);
-  //   const role = await this.roleRepository.findOneBy({ name: roleName });
-
-  //   if (!role) {
-  //     throw new Error('Role not found');
-  //   }
-
-  //   user.roles.push(role);
-  //   return await this.userRepository.save(user);
-  // }
-
   async findAll(): Promise<User[]> {
     return await this.userRepository.find();
   }
@@ -90,5 +71,19 @@ export class UserService {
       where: { email },
       relations: ['roles'],
     });
+  }
+
+  // add method to ban a user by  id and make it inactive with edit the status from active to inactive
+  async banUser(id: number): Promise<User> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    if (user.status === 'inactive') {
+      user.status = 'active';
+      return await this.userRepository.save(user);
+    }
+    user.status = 'inactive';
+    return await this.userRepository.save(user);
   }
 }

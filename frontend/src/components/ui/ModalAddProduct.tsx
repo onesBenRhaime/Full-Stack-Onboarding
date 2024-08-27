@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import ModalAddCategory from "./ModalAddCategory";
 import Image from "next/image";
+import API_BASE_URL from "@/utils/config";
 
 type ModalProps = {
 	isOpen: boolean;
@@ -24,6 +25,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 		imageUrl ? `/products/${imageUrl}` : ""
 	);
 
+	const queryClient = useQueryClient();
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
@@ -54,9 +56,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 	};
 
 	const fetchCategories = async () => {
-		const response = await fetch(
-			"https://full-stack-onboarding-back.vercel.app/categories"
-		);
+		const response = await fetch(`${API_BASE_URL}categories`);
 		if (!response.ok) {
 			throw new Error("Network response was not ok");
 		}
@@ -75,10 +75,9 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 	} | null>(null);
 
 	const addCategory = async (category: any) => {
-		const response = await axios.post(
-			"https://full-stack-onboarding-back.vercel.app/categories",
-			category
-		);
+		const response = await axios.post(`${API_BASE_URL}categories`, category);
+
+		queryClient.invalidateQueries({ queryKey: ["categories"] });
 		return response.data;
 	};
 
@@ -93,6 +92,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 5000);
+			queryClient.invalidateQueries({ queryKey: ["categories"] });
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -105,13 +105,9 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 	});
 
 	const uploadImage = async (file: File): Promise<string> => {
-		// Implement the actual image upload logic here.
-		// For demonstration, we'll mock the behavior by returning just the filename.
 		return new Promise((resolve) => {
-			// Mock image upload and filename
 			setTimeout(() => {
-				// 			resolve(URL.createObjectURL(file));
-				const filename = file.name; // Replace with the actual filename returned from your server
+				const filename = file.name;
 				resolve(filename);
 			}, 1000);
 		});
@@ -122,7 +118,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 			<Dialog
 				open={isOpen}
 				onClose={onClose}
-				className="fixed inset-0 flex items-center justify-center z-50"
+				className="fixed inset-0 flex items-center justify-center"
 			>
 				<div
 					className="fixed inset-0 bg-black opacity-30"
@@ -158,7 +154,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 											: `/products/${imagePreview}`
 									}
 									alt="Product Preview"
-									className="mb-2 w-full h-48 object-center rounded-md"
+									className="mb-2 w-36 h-10 lg:w-28 lg:h-20 object-center rounded-md"
 									width={640}
 									height={48}
 								/>
@@ -182,11 +178,11 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 								Category
 							</label>
 
-							<div className="flex justify-between">
+							<div className="relative">
 								<select
 									value={category}
 									onChange={(e) => setCategory(e.target.value)}
-									className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm me-2"
+									className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
 									required
 								>
 									<option value="">Select Category</option>
@@ -250,7 +246,7 @@ const Modal = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
 								className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-								rows={4}
+								rows={2}
 							/>
 						</div>
 						<div className="flex justify-end">

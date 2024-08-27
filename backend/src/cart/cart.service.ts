@@ -26,7 +26,7 @@ export class CartService {
       where: { user },
       relations: ['items', 'items.product'],
     });
-    console.log('cart : ', cart);
+    // console.log('cart : ', cart);
 
     if (!cart) {
       throw new NotFoundException('Cart not found for this user.');

@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
 import { Dialog } from "@headlessui/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ModalProps = {
 	isOpen: boolean;
@@ -9,11 +12,13 @@ type ModalProps = {
 
 const ModalAddCategory = ({ isOpen, onClose, onSubmit }: ModalProps) => {
 	const [categoryName, setCategoryName] = useState("");
+	const queryClient = useQueryClient();
 	const handleSubmit = (e: any) => {
 		e.preventDefault();
 		onSubmit({
 			name: categoryName,
 		});
+		queryClient.invalidateQueries({ queryKey: ["categories"] });
 		onClose();
 	};
 

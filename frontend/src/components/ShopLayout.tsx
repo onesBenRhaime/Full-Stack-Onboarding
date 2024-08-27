@@ -10,13 +10,13 @@ const ShopLayout = () => {
 			<div className="container mx-auto p-6">
 				{/* Hero Section */}
 				{/* Hero Section */}
-				<section className="bg-white shadow rounded-lg p-6 mb-8 text-center">
+				<section className=" rounded-xl">
 					<div
-						className="bg-gray-200 rounded-md mb-4 relative flex items-center justify-center"
+						className="relative bg-cover rounded-xl"
 						style={{
 							backgroundImage: "url('/images/hero-3.png')",
 							backgroundSize: "cover",
-							height: "300px",
+							height: "400px",
 							backgroundPosition: "center",
 						}}
 					></div>

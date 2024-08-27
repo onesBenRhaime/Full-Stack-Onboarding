@@ -60,12 +60,12 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 						(item: any) => item.product
 					);
 					setWishlist(transformedWishlist);
-					console.log("transformedWishlist :", transformedWishlist);
-					console.log(
-						"id for item to delete  :",
-						// transformedWishlist?.items[0]?.id
-						transformedWishlist[0].id
-					);
+					// console.log("transformedWishlist :", transformedWishlist);
+					// console.log(
+					// 	"id for item to delete  :",
+					// 	// transformedWishlist?.items[0]?.id
+					// 	transformedWishlist[0].id
+					// );
 				} else {
 					console.error("Invalid wishlist data", data);
 					setWishlist([]);

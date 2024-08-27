@@ -4,23 +4,22 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/Context/CartContext";
 import { useAuth } from "@/Context/AuthContext";
+import { useState } from "react";
+
 const HeaderSection = () => {
 	const router = useRouter();
 	const { user, logout } = useAuth();
-
 	const { cartCount } = useCart();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
 		<>
 			{/* Header */}
-			<header
-				className={`bg-white shadow ${
-					user?.role.includes("admin") ? "hidden" : ""
-				}`}
-			>
+			<header className={`bg-white shadow`}>
 				<div className="container mx-auto flex justify-between items-center py-4 px-6">
-					{/*  border-collapse border-2  */}
-					<div className="flex  justify-start rounded-3xl p-4 ">
+					<div className="flex justify-start rounded-3xl p-4 ">
 						<Image
 							src="/icons/home.png"
 							className="w-15 h-8 me-4 "
@@ -32,45 +31,79 @@ const HeaderSection = () => {
 							<span className="text-primary ">E-</span>Commerce
 						</h1>
 					</div>
-					<div className=" flex justify-end ">
-						<nav className="space-x-4  py-2 px-8">
+					<div className="lg:hidden flex justify-between ">
+						{!user && (
+							<div className="flex justify-between space-x-4">
+								<Link
+									href="/auth/login"
+									className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+								>
+									Login
+								</Link>
+
+								<Link
+									href="/auth/register"
+									className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+								>
+									SignIn
+								</Link>
+							</div>
+						)}
+						<button
+							onClick={toggleMenu}
+							className="text-gray-600 hover:text-gray-800 ms-10"
+						>
+							<Image
+								src="/icons/hamburger.png"
+								className="w-6 h-6"
+								width={6}
+								height={6}
+								alt="Menu"
+							/>
+						</button>
+					</div>
+					<div className="hidden lg:flex justify-end z-auto">
+						<nav className="space-x-4 py-2 px-8">
 							<Link
 								href="/"
-								className="text-gray-600 hover:text-gray-800  hover:underline "
+								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Home
 							</Link>
 							<Link
 								href="/products"
-								className="text-gray-600 hover:text-gray-800 hover:underline "
+								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Shop
 							</Link>
-
-							<Link
-								href="/wishlist"
-								className="text-gray-600 hover:text-gray-800 hover:underline "
-							>
-								Wishlist
-							</Link>
-							<Link
-								href="#"
-								className="text-gray-600 hover:text-gray-800 hover:underline "
-							>
-								Profile
-							</Link>
 							{user && (
-								<button
-									onClick={logout}
-									className="text-gray-600 hover:text-gray-800  hover:border-collapse hover:border  hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
-								>
-									Logout
-								</button>
+								<>
+									<Link
+										href="/wishlist"
+										className="text-gray-600 hover:text-gray-800 hover:underline"
+									>
+										Wishlist
+									</Link>
+
+									<Link
+										href="#"
+										className="text-gray-600 hover:text-gray-800 hover:underline"
+									>
+										Profile
+									</Link>
+
+									<button
+										onClick={logout}
+										className="text-gray-600 hover:text-gray-800 hover:border-collapse hover:border hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
+									>
+										Logout
+									</button>
+								</>
 							)}
-						</nav>{" "}
+						</nav>
 						<div className="relative">
 							{user ? (
-								<div className="flex  justify-between rounded-3xl border-collapse border-2 ps-4 py-2 ">
+								<div className="flex justify-between rounded-3xl border-collapse border-2 ps-4 py-2">
 									<Image
 										src="/icons/shopping-cart.png"
 										className="w-22 h-15"
@@ -82,7 +115,7 @@ const HeaderSection = () => {
 										onClick={() => {
 											cartCount == 0
 												? alert(
-														"you Should add products to your cart then proceed to it "
+														"You should add products to your cart then proceed to it"
 												  )
 												: router.push("/cart");
 										}}
@@ -93,17 +126,17 @@ const HeaderSection = () => {
 									</button>
 								</div>
 							) : (
-								<div className="flex  justify-between  space-x-4 ">
+								<div className="flex justify-between space-x-4">
 									<Link
 										href="/auth/login"
-										className="bg-black text-white px-4 py-2  rounded-md hover:bg-white hover:text-black  border hover:font-bold"
+										className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 									>
 										Login
 									</Link>
 
 									<Link
 										href="/auth/register"
-										className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black  border hover:font-bold"
+										className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 									>
 										Register
 									</Link>
@@ -112,6 +145,71 @@ const HeaderSection = () => {
 						</div>
 					</div>
 				</div>
+
+				{isMenuOpen && (
+					<div className="lg:hidden relative w-1/2 right-0 bg-white shadow-lg p-4">
+						<nav className="flex flex-col space-y-4">
+							<Link
+								href="/"
+								className="text-gray-600 hover:text-gray-800 hover:underline"
+							>
+								Home
+							</Link>
+							<Link
+								href="/products"
+								className="text-gray-600 hover:text-gray-800 hover:underline"
+							>
+								Shop
+							</Link>
+							<Link
+								href="/wishlist"
+								className="text-gray-600 hover:text-gray-800 hover:underline"
+							>
+								Wishlist
+							</Link>
+							<Link
+								href="#"
+								className="text-gray-600 hover:text-gray-800 hover:underline"
+							>
+								Profile
+							</Link>
+							{user && (
+								<button
+									onClick={logout}
+									className="text-gray-600 hover:text-gray-800 hover:border-collapse hover:border hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
+								>
+									Logout
+								</button>
+							)}
+							{user ? (
+								<div className="flex justify-between rounded-3xl border-collapse border-2 ps-4 py-2">
+									<Image
+										src="/icons/shopping-cart.png"
+										className="w-22 h-15"
+										width={22}
+										height={15}
+										alt=""
+									/>
+									<button
+										onClick={() => {
+											cartCount == 0
+												? alert(
+														"You should add products to your cart then proceed to it"
+												  )
+												: router.push("/cart");
+										}}
+										className="text-gray-600 hover:text-gray-800 px-4 font-bold text-xl"
+									>
+										Your cart
+										<span className="text-red-600 me-1">({cartCount})</span>
+									</button>
+								</div>
+							) : (
+								""
+							)}
+						</nav>
+					</div>
+				)}
 			</header>
 		</>
 	);

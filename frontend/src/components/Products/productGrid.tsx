@@ -1,8 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
 import Modal from "../ui/ModalAddProduct";
-
 import Toast from "../ui/Toast";
 import ModalEditProduct from "../ui/ModalEditProduct";
 import { Product } from "../../../types/product";
@@ -19,10 +18,13 @@ export default function ProductGrid() {
 		description: string;
 		variant: "success" | "error" | "info" | "warning";
 	} | null>(null);
+
+	const queryClient = useQueryClient();
+
 	const fetchProducts = async () => {
 		const response = await fetch(`${API_BASE_URL}products`);
 		if (!response.ok) {
-			throw new Error("Network response  problem");
+			throw new Error("Network response problem");
 		}
 		return response.json();
 	};
@@ -37,6 +39,7 @@ export default function ProductGrid() {
 		const response = await axios.post(`${API_BASE_URL}products`, product);
 		return response.data;
 	};
+
 	const editProduct = async (product: any) => {
 		const response = await axios.patch(
 			`${API_BASE_URL}products/${product.id}`,
@@ -44,6 +47,7 @@ export default function ProductGrid() {
 		);
 		return response.data;
 	};
+
 	const removeProduct = async (productId: number) => {
 		const response = await axios.delete(`${API_BASE_URL}products/${productId}`);
 		return response.data;
@@ -60,6 +64,7 @@ export default function ProductGrid() {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 5000);
+			queryClient.invalidateQueries({ queryKey: ["products"] });
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -70,6 +75,7 @@ export default function ProductGrid() {
 			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
+
 	const editMutation = useMutation({
 		mutationFn: editProduct,
 		onSuccess: () => {
@@ -81,6 +87,7 @@ export default function ProductGrid() {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 5000);
+			queryClient.invalidateQueries({ queryKey: ["products"] });
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -91,6 +98,7 @@ export default function ProductGrid() {
 			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
+
 	const removeMutation = useMutation({
 		mutationFn: removeProduct,
 		onSuccess: () => {
@@ -102,6 +110,7 @@ export default function ProductGrid() {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 1000);
+			queryClient.invalidateQueries({ queryKey: ["products"] });
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -112,6 +121,7 @@ export default function ProductGrid() {
 			setTimeout(() => setAlertMessage(null), 3000);
 		},
 	});
+
 	const handleAddProduct = async (product: any) => {
 		try {
 			await mutation.mutateAsync(product);
@@ -135,6 +145,7 @@ export default function ProductGrid() {
 			setIsDropdownOpen(index);
 		}
 	};
+
 	const handleEdit = (product: Product) => {
 		setCurrentProduct(product);
 		setIsModalEditOpen(true);
@@ -144,7 +155,7 @@ export default function ProductGrid() {
 		try {
 			await removeMutation.mutateAsync(productId);
 		} catch (error) {
-			console.error("Failed to edit product:", error);
+			console.error("Failed to delete product:", error);
 		}
 	};
 
@@ -154,13 +165,13 @@ export default function ProductGrid() {
 				<h1 className="text-2xl font-bold">All Products</h1>
 				<button
 					onClick={() => setIsModalOpen(true)}
-					className="bg-primary text-black px-4 py-2 rounded-xl hover:bg-white hover:text-primary border-collapse border-2 border-primary  "
+					className="bg-primary text-black px-4 py-2 rounded-xl hover:bg-white hover:text-primary border-2 border-primary"
 				>
 					+ ADD NEW PRODUCT
 				</button>
 			</div>
 			{alertMessage && (
-				<div className="fixed bottom-4 top-20 right-4  ">
+				<div className="fixed bottom-4 right-4">
 					<Toast
 						title={alertMessage.title}
 						description={alertMessage.description}
@@ -168,81 +179,52 @@ export default function ProductGrid() {
 					/>
 				</div>
 			)}
-			<div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 				{products?.map((item: any, index: any) => (
-					<div key={index} className="bg-white p-4 rounded-xl shadow-lg">
-						<div className="flex justify-between items-center mb-2 mx-2">
-							<Image
-								src={`/products/${item.imageUrl}`}
-								alt="Product"
-								width={80}
-								height={80}
-								className="object-cover rounded-lg"
-							/>
-							<div className="flex flex-col">
-								<h3 className="text-xl font-semibold ">{item.name}</h3>
-								<p className="text-gray-600 ">{item.category?.name}</p>
-								<p className="text-primary text-md font-bold ">${item.price}</p>
+					<div
+						key={index}
+						className="bg-white p-4 rounded-xl shadow-lg flex flex-col"
+					>
+						<div className="relative  flex  justify-between">
+							<div>
+								<span className="absolute top-0 left-0 z-9999 bg-primary text-white  px-2 py-1 rounded-tr-lg rounded-bl-lg w-1/4">
+									{item.category?.name}
+								</span>
 							</div>
-							<div className="relative">
-								<button
-									onClick={() => handleDropdownToggle(index)}
-									className="text-black hover:text-primary font-bold hover:font-extrabold px-2 "
-								>
-									...
-								</button>
-								{isDropdownOpen === index && (
-									<div className="absolute right-0   mt-2 py-2 w-48 bg-white rounded-lg shadow-xl z-20">
-										<button
-											onClick={() => handleEdit(item)}
-											className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
-										>
-											Edit
-										</button>
-										<button
-											onClick={() => handleDelete(item.id)}
-											className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
-										>
-											Delete
-										</button>
-									</div>
-								)}
-							</div>
+							<button
+								onClick={() => handleDropdownToggle(index)}
+								className="text-black hover:text-primary font-bold hover:font-extrabold px-2 text-3xl"
+							>
+								...
+							</button>
+							{isDropdownOpen === index && (
+								<div className="absolute right-0 mt-10 py-2 w-48 bg-white rounded-lg shadow-xl z-20">
+									<button
+										onClick={() => handleEdit(item)}
+										className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+									>
+										Edit
+									</button>
+									<button
+										onClick={() => handleDelete(item.id)}
+										className="block px-4 py-2 text-gray-800 hover:bg-gray-200 w-full text-left"
+									>
+										Delete
+									</button>
+								</div>
+							)}
 						</div>
-
-						<p className="text-sm text-gray-600">Summary</p>
-						<p className="text-xs text-gray-400 mb-4">{item.description}</p>
-						<div className="flex-col justify-between text-sm border-collapse border-2  rounded-xl">
-							<div className="text-gray-600 m-2 flex justify-between">
-								Sales{" "}
-								<div className=" flex">
-									<span className="text-primary me-2">1269</span>
-									<Image
-										src="/icons/top.svg"
-										width={30}
-										height={30}
-										alt="Sale"
-										className="ml-2"
-										color="primary"
-									/>
-								</div>
-							</div>
-
-							<hr className="my-2 mx-2" />
-							<div className="text-gray-600 m-2 flex justify-between">
-								Remaining Products
-								<div className="flex">
-									<span className="text-primary me-2">1269</span>
-									<Image
-										src="/icons/progress.svg"
-										width={30}
-										height={30}
-										alt="Sale"
-										className="ml-2 w-30 h-30"
-										color="primary"
-									/>
-								</div>
-							</div>
+						<Image
+							src={`/products/${item.imageUrl}`}
+							alt="Product"
+							width={200}
+							height={200}
+							className="object-cover rounded-lg mb-4 w-full h-58"
+						/>
+						<div className="flex flex-col flex-grow">
+							<h3 className="text-xl font-semibold">{item.name}</h3>
+							<p className="text-gray-600">{item.category?.name}</p>
+							<p className="text-primary text-md font-bold">${item.price}</p>
 						</div>
 					</div>
 				))}

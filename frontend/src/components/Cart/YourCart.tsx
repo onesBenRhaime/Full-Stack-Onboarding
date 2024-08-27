@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import CartItem from "./Cart-Item";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalConfirme from "../ui/ModalConfirme";
 import Toast from "../ui/Toast";
 import { useRouter } from "next/navigation";
@@ -14,8 +14,8 @@ import API_BASE_URL from "@/utils/config";
 
 const YourCart = () => {
 	const { user } = useAuth();
-
 	const { cartCount, clearCartCount } = useCart();
+	const [amount, setAmount] = useState(0);
 	const token = Cookies.get("authToken");
 	const router = useRouter();
 	const [alertMessage, setAlertMessage] = useState<{
@@ -138,6 +138,19 @@ const YourCart = () => {
 			console.error("Failed to clear cart:", error);
 		}
 	};
+	const AmountTotal = () => {
+		let total = 0;
+		items?.items.forEach((item: any) => {
+			total += item.product.price * item.quantity;
+		});
+		setAmount(total);
+	};
+	useEffect(() => {
+		if (items) {
+			AmountTotal();
+		}
+	}, [items, AmountTotal]);
+
 	if (!user) {
 		return (
 			<div>
@@ -145,15 +158,13 @@ const YourCart = () => {
 			</div>
 		); // Ou rediriger l'utilisateur
 	}
+
 	return (
 		<>
 			<section className="pt-28">
 				<div className="flex justify-between items-center border-b pb-4 mb-10 container">
 					<h1 className="text-xl font-semibold">Shopping Cart</h1>
-					<span className="text-gray-500">
-						{/* Your cart ({items?.items?.length}) */}
-						Your cart ({cartCount})
-					</span>
+					<span className="text-gray-500">Your cart ({cartCount})</span>
 				</div>
 				{alertMessage && (
 					<div className="fixed bottom-4 top-20 right-4">
@@ -170,7 +181,11 @@ const YourCart = () => {
 							<div className="bg-gray-50 p-6 shadow-md rounded-lg">
 								<div className="flex flex-col gap-6">
 									{items?.items.map((item: any, index: any) => (
-										<CartItem item={item} key={index} />
+										<CartItem
+											item={item}
+											key={index}
+											AmountTotal={AmountTotal}
+										/>
 									))}
 								</div>
 							</div>
@@ -195,7 +210,7 @@ const YourCart = () => {
 							</div>
 							<div className="flex justify-between font-bold text-lg mb-6">
 								<span>Total Amount</span>
-								<span>€5000</span>
+								<span>€{amount}</span>
 							</div>
 						</div>
 						<div className="flex justify-between space-x-3 mx-10">

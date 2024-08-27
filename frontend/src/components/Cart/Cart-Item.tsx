@@ -8,7 +8,13 @@ import Cookies from "js-cookie";
 import { useCart } from "@/Context/CartContext";
 import API_BASE_URL from "@/utils/config";
 
-const CartItem = ({ item }: { item: any }) => {
+const CartItem = ({
+	item,
+	AmountTotal,
+}: {
+	item: any;
+	AmountTotal: () => void;
+}) => {
 	const [quantity, setQuantity] = useState(item.quantity);
 	const { deleteFromCart: deleteFromCart } = useCart();
 	const token = Cookies.get("authToken");
@@ -41,6 +47,8 @@ const CartItem = ({ item }: { item: any }) => {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 1000);
+
+			AmountTotal();
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -91,6 +99,7 @@ const CartItem = ({ item }: { item: any }) => {
 			setTimeout(() => {
 				setAlertMessage(null);
 			}, 1000);
+			AmountTotal();
 		},
 		onError: (error) => {
 			setAlertMessage({
@@ -145,6 +154,7 @@ const CartItem = ({ item }: { item: any }) => {
 						className="flex-1 w-12 h-8 bg-gray-100 border border-gray-300 rounded-md"
 						value={quantity}
 						onChange={(e) => setQuantity(Number(e.target.value))}
+						min={1}
 					/>
 					<button className="bg-gray-100 p-1" onClick={handleEditItem}>
 						Update

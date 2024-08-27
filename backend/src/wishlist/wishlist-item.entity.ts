@@ -12,6 +12,6 @@ export class WishlistItem {
   @ManyToOne(() => Wishlist, (wishlist) => wishlist.items)
   wishlist: Wishlist;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, { onDelete: 'CASCADE' })
   product: Product;
 }

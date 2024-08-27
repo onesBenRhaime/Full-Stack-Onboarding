@@ -21,12 +21,12 @@ export class ProductController {
   }
 
   @Get('newArrivals')
-  async findAll() {
-    return await this.productService.findAll();
-  }
-  @Get()
   async getNewArrivals() {
     return await this.productService.getNewArrivals();
+  }
+  @Get()
+  async getAllproducts() {
+    return await this.productService.findAll();
   }
 
   @Get(':id')

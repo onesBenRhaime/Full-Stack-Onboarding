@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 
 export default function ListOrder() {
 	const token = Cookies.get("authToken");
-	const fetchProducts = async () => {
+	const fetchOrders = async () => {
 		//use axios to fetch data from the server
 		const response = await axios.get(`${API_BASE_URL}orders/all`, {
 			headers: {
@@ -21,9 +21,9 @@ export default function ListOrder() {
 		return response.data;
 	};
 
-	const { data: products } = useQuery({
-		queryKey: ["products"],
-		queryFn: fetchProducts,
+	const { data: orders } = useQuery({
+		queryKey: ["orders"],
+		queryFn: fetchOrders,
 		staleTime: Infinity,
 	});
 
@@ -45,10 +45,11 @@ export default function ListOrder() {
 							<th className="py-3 px-6 text-left">Date</th>
 							<th className="py-3 px-6 text-left">Status</th>
 							<th className="py-3 px-6 text-left">Total</th>
+							<th className="py-3 px-6 text-left">Action</th>
 						</tr>
 					</thead>
 					<tbody className="text-gray-600 text-sm font-light">
-						{products?.map((order: any, index: any) => (
+						{orders?.map((order: any, index: any) => (
 							<tr
 								key={index}
 								className="border-b border-gray-200 hover:bg-gray-100"
@@ -77,6 +78,11 @@ export default function ListOrder() {
 								</td>
 								<td className="py-3 px-6 text-left">
 									<span>{order.totalAmount}</span>
+								</td>
+								<td className="py-3 px-6 text-left">
+									<button className="text-black me-2 ">👁‍🗨</button>
+									<button className="text-black p-2">✔</button>
+									<button className="text-black  p-2">❌</button>
 								</td>
 							</tr>
 						))}
