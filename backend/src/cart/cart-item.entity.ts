@@ -12,7 +12,7 @@ export class CartItem {
   @ManyToOne(() => Cart, (cart) => cart.items)
   cart: Cart;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, { onDelete: 'CASCADE' })
   product: Product;
 
   @Column({ default: 1 })

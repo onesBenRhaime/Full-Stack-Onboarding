@@ -4,19 +4,16 @@ import axios from "axios";
 import Image from "next/image";
 import { useState } from "react";
 import Toast from "../ui/Toast";
-import Cookies from "js-cookie";
 import { useCart } from "@/Context/CartContext";
 import { useWishlist } from "../../Context/WishlistContext";
 import API_BASE_URL from "@/utils/config";
+import { useAuth } from "@/Context/AuthContext";
+import ModalInfo from "../ui/ModalInfo";
 
-const ProductCard = ({
-	product,
-}: // onProductUpdate,
-{
-	product: any;
-	// onProductUpdate: (updatedProduct: any) => void;
-}) => {
-	const token = Cookies.get("authToken");
+const ProductCard = ({ product }: { product: any }) => {
+	const { token } = useAuth();
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [alertMessage, setAlertMessage] = useState<{
 		title: string;
 		description: string;
@@ -112,7 +109,9 @@ const ProductCard = ({
 			<div className="flex space-x-4 mt-4">
 				<button
 					className=" bg-black text-white rounded-lg px-2 py-1"
-					onClick={() => handleAddToCart(product.id)}
+					onClick={() => {
+						token ? handleAddToCart(product) : setIsModalOpen(true);
+					}}
 				>
 					Add to Cart
 				</button>
@@ -125,6 +124,8 @@ const ProductCard = ({
 					{isInWishlist(product.id) ? "In Wishlist" : "Save for later"}
 				</button>
 			</div>
+
+			<ModalInfo isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 		</div>
 	);
 };

@@ -1,36 +1,9 @@
 "use client";
 import Image from "next/image";
 import ProductCard from "./ProductCard";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import API_BASE_URL from "@/utils/config";
 import { useProduct } from "@/Context/ProductContext";
 
 const AllProducts = () => {
-	// const fetchProducts = async () => {
-	// 	const response = await fetch(`${API_BASE_URL}products`);
-	// 	if (!response.ok) {
-	// 		throw new Error("Network response problem");
-	// 	}
-	// 	return response.json();
-	// };
-
-	// const { data: initialProducts } = useQuery({
-	// 	queryKey: ["products"],
-	// 	queryFn: fetchProducts,
-	// 	staleTime: Infinity,
-	// });
-
-	// const [products, setProducts] = useState(initialProducts);
-
-	// // Callback function to handle updates to the product list
-	// const handleProductUpdate = (updatedProduct: any) => {
-	// 	setProducts((prevProducts: any) =>
-	// 		prevProducts.map((product: any) =>
-	// 			product.id === updatedProduct.id ? updatedProduct : product
-	// 		)
-	// 	);
-	// };
 	const { products } = useProduct();
 	return (
 		<>
@@ -57,11 +30,7 @@ const AllProducts = () => {
 				<section className="mb-8">
 					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 						{products?.map((item: any) => (
-							<ProductCard
-								key={item.id}
-								product={item}
-								// onProductUpdate={handleProductUpdate}
-							/>
+							<ProductCard key={item.id} product={item} />
 						))}
 					</div>
 				</section>
