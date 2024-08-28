@@ -81,7 +81,18 @@ const HeaderSection = () => {
 							>
 								Shop
 							</button>
-
+							<button
+								onClick={() => {
+									if (user) {
+										router.push("/wishlist");
+									} else {
+										setIsModalOpen(true);
+									}
+								}}
+								className="text-gray-600 hover:text-gray-800 hover:underline"
+							>
+								Wishlist
+							</button>
 							{user && (
 								<>
 									<Link
