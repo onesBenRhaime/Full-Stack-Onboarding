@@ -5,15 +5,30 @@ import Sidebar from "@/components/Admin/Sidebar";
 import Topbar from "@/components/Admin/Topbar";
 import ListOrder from "@/components/Orders/ListOrders";
 import { useAuth } from "@/Context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Orders() {
 	const { user } = useAuth();
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const toggleSidebar = () => {
 		setSidebarOpen((prev) => !prev);
 	};
+	useEffect(() => {
+		if (user) {
+			setLoading(false);
+		}
+	}, [user]);
+
+	if (loading) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<p className="text-5xl text-primary">Loading...</p>
+			</div>
+		);
+	}
+
 	if (!user?.role.includes("admin")) {
 		return (
 			<div>
@@ -21,6 +36,7 @@ export default function Orders() {
 			</div>
 		);
 	}
+
 	return (
 		<>
 			<div className=" flex h-screen">

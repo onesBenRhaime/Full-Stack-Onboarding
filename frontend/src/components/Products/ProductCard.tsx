@@ -106,9 +106,9 @@ const ProductCard = ({ product }: { product: any }) => {
 			<p className="text-lg font-bold">
 				<span>€{product.price}</span>
 			</p>
-			<div className="flex space-x-4 mt-4">
+			<div className="flex space-x-4 mt-4 font-bold">
 				<button
-					className=" bg-black text-white rounded-lg px-2 py-1"
+					className=" bg-primary text-white rounded-lg px-4 py-2"
 					onClick={() => {
 						token ? handleAddToCart(product) : setIsModalOpen(true);
 					}}
@@ -117,8 +117,10 @@ const ProductCard = ({ product }: { product: any }) => {
 				</button>
 
 				<button
-					className=" bg-gray-200 text-black rounded-lg px-2 py-1"
-					onClick={() => addToWishlist(product)}
+					className=" bg-gray-200 text-pink-600 rounded-lg px-2 py-1"
+					onClick={() =>
+						token ? addToWishlist(product) : setIsModalOpen(true)
+					}
 					disabled={isInWishlist(product.id)}
 				>
 					{isInWishlist(product.id) ? "In Wishlist" : "Save for later"}

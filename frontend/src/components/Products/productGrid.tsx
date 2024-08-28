@@ -7,12 +7,14 @@ import ModalEditProduct from "../ui/ModalEditProduct";
 import { Product } from "../../../types/product";
 import { useState } from "react";
 import API_BASE_URL from "@/utils/config";
+import { useProduct } from "@/Context/ProductContext";
 
 export default function ProductGrid() {
 	const [isDropdownOpen, setIsDropdownOpen] = useState<number | null>(null);
 	const [currentProduct, setCurrentProduct] = useState<any>(null);
 	const [isModalEditOpen, setIsModalEditOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const { products } = useProduct();
 	const [alertMessage, setAlertMessage] = useState<{
 		title: string;
 		description: string;
@@ -20,20 +22,6 @@ export default function ProductGrid() {
 	} | null>(null);
 
 	const queryClient = useQueryClient();
-
-	const fetchProducts = async () => {
-		const response = await fetch(`${API_BASE_URL}products`);
-		if (!response.ok) {
-			throw new Error("Network response problem");
-		}
-		return response.json();
-	};
-
-	const { data: products } = useQuery({
-		queryKey: ["products"],
-		queryFn: fetchProducts,
-		staleTime: Infinity,
-	});
 
 	const addProduct = async (product: any) => {
 		const response = await axios.post(`${API_BASE_URL}products`, product);

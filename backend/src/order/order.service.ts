@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CartService } from '../cart/cart.service';
@@ -54,5 +54,23 @@ export class OrderService {
     return this.orderRepository.find({
       relations: ['user'],
     });
+  }
+  //acept order
+  async acceptOrder(id: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id } });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    order.status = 'accepted';
+    return this.orderRepository.save(order);
+  }
+  //reject order
+  async rejectOrder(id: number): Promise<Order> {
+    const order = await this.orderRepository.findOne({ where: { id } });
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+    order.status = 'rejected';
+    return this.orderRepository.save(order);
   }
 }

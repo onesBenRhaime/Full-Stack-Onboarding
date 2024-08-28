@@ -1,31 +1,55 @@
 "use client";
-import API_BASE_URL from "@/utils/config";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-import Cookies from "js-cookie";
+import { useOrder } from "@/Context/OrderContext";
+import React, { useState } from "react";
 
 export default function ListOrder() {
-	const token = Cookies.get("authToken");
-	const fetchOrders = async () => {
-		//use axios to fetch data from the server
-		const response = await axios.get(`${API_BASE_URL}orders/all`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
-		if (!response.data) {
-			throw new Error("Network response problem");
+	const { orders, acceptOrder, rejectOrder } = useOrder();
+	const [alertMessage, setAlertMessage] = useState<{
+		title: string;
+		description: string;
+		variant: "success" | "error" | "info" | "warning";
+	} | null>(null);
+	const handleAcceptOrder = async (orderId: number) => {
+		try {
+			await acceptOrder(orderId);
+			setAlertMessage({
+				title: "order accepted ",
+				description: "order has been accepted successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 5000);
+		} catch (error) {
+			setAlertMessage({
+				title: "order Failed",
+				description: `Failed to accept order`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
 		}
-		console.log(response.data);
-		return response.data;
 	};
 
-	const { data: orders } = useQuery({
-		queryKey: ["orders"],
-		queryFn: fetchOrders,
-		staleTime: Infinity,
-	});
+	const handleRejectOrder = async (orderId: number) => {
+		try {
+			await rejectOrder(orderId);
+			setAlertMessage({
+				title: "order rejected ",
+				description: "order has been rejected successfully.",
+				variant: "success",
+			});
+			setTimeout(() => {
+				setAlertMessage(null);
+			}, 5000);
+		} catch (error) {
+			setAlertMessage({
+				title: "order Failed",
+				description: `Failed to reject order`,
+				variant: "error",
+			});
+			setTimeout(() => setAlertMessage(null), 3000);
+		}
+	};
 
 	return (
 		<div className="flex-1 p-4">
@@ -49,16 +73,16 @@ export default function ListOrder() {
 						</tr>
 					</thead>
 					<tbody className="text-gray-600 text-sm font-light">
-						{orders?.map((order: any, index: any) => (
+						{orders?.map((order) => (
 							<tr
-								key={index}
+								key={order.id}
 								className="border-b border-gray-200 hover:bg-gray-100"
 							>
 								<td className="py-3 px-6 text-left whitespace-nowrap">
 									<span className="font-medium">{order.id}</span>
 								</td>
 								<td className="py-3 px-6 text-left">
-									<span>{order.user?.username}</span>
+									<span>{order.user.username}</span>
 								</td>
 								<td className="py-3 px-6 text-left">
 									<span>{order.orderDate}</span>
@@ -80,9 +104,18 @@ export default function ListOrder() {
 									<span>{order.totalAmount}</span>
 								</td>
 								<td className="py-3 px-6 text-left">
-									<button className="text-black me-2 ">👁‍🗨</button>
-									<button className="text-black p-2">✔</button>
-									<button className="text-black  p-2">❌</button>
+									<button
+										className="text-black p-2 border-collapse border-2 mx-2  r-2 border-green-500"
+										onClick={() => handleAcceptOrder(order.id)}
+									>
+										✔
+									</button>
+									<button
+										className="text-black p-2 border-collapse border-2 mx-2  r-2 border-red-500"
+										onClick={() => handleRejectOrder(order.id)}
+									>
+										❌
+									</button>
 								</td>
 							</tr>
 						))}

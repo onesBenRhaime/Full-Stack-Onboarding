@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../user/user.entity';
 import { Order } from './order.entity';
@@ -25,4 +33,25 @@ export class OrderController {
   getAllOrders(): Promise<Order[]> {
     return this.orderService.getAllOrders();
   }
+
+  //accrept order
+  @Post('accept/:id')
+  async acceptOrder(
+    @Req() req,
+    @Body() body,
+    @Param('id') id: number,
+  ): Promise<Order> {
+    return this.orderService.acceptOrder(id);
+  }
+
+  //reject order
+  @Post('reject/:id')
+  async rejectOrder(
+    @Req() req,
+    @Body() body,
+    @Param('id') id: number,
+  ): Promise<Order> {
+    return this.orderService.rejectOrder(id);
+  }
+  
 }

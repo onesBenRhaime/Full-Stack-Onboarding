@@ -1,4 +1,3 @@
-// CartContext.tsx
 "use client";
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -7,9 +6,9 @@ import Cookies from "js-cookie";
 import API_BASE_URL from "@/utils/config";
 interface CartContextType {
 	cartCount: number;
-	addToCart: () => Promise<void>; // Update this line
+	addToCart: () => Promise<void>;
 	deleteFromCart: () => Promise<void>;
-	clearCartCount: () => void; // Add this line
+	clearCartCount: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
