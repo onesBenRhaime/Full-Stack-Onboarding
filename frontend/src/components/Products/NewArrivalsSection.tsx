@@ -2,33 +2,26 @@
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "./ProductCard";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import API_BASE_URL from "@/utils/config";
+import { useProduct } from "@/Context/ProductContext";
 
 const NewArrivalsSection = () => {
-	const fetchProducts = async () => {
-		const response = await fetch(`${API_BASE_URL}products/newArrivals`);
-		if (!response.ok) {
-			throw new Error("Network response  problem");
-		}
-		return response.json();
-	};
+	// const fetchProducts = async () => {
+	// 	const response = await fetch(`${API_BASE_URL}products/newArrivals`);
+	// 	if (!response.ok) {
+	// 		throw new Error("Network response  problem");
+	// 	}
+	// 	return response.json();
+	// };
 
-	const { data: initialProducts } = useQuery({
-		queryKey: ["products"],
-		queryFn: fetchProducts,
-		staleTime: Infinity,
-	});
-	const [products, setProducts] = useState(initialProducts);
+	// const { data: initialProducts } = useQuery({
+	// 	queryKey: ["products"],
+	// 	queryFn: fetchProducts,
+	// 	staleTime: Infinity,
+	// });
+	// const [products, setProducts] = useState(initialProducts);
 
-	const handleProductUpdate = (updatedProduct: any) => {
-		setProducts((prevProducts: any) =>
-			prevProducts.map((product: any) =>
-				product.id === updatedProduct.id ? updatedProduct : product
-			)
-		);
-	};
+	// const handleProductUpdate = (newArrivals: any) => {};
+	const { newArrivals } = useProduct();
 
 	return (
 		<>
@@ -64,11 +57,11 @@ const NewArrivalsSection = () => {
 					</Link>
 				</div>
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-					{products?.map((item: any, index: any) => (
+					{newArrivals?.map((item: any, index: any) => (
 						<ProductCard
 							key={index}
 							product={item}
-							onProductUpdate={handleProductUpdate}
+							// onProductUpdate={handleProductUpdate}
 						/>
 					))}
 				</div>

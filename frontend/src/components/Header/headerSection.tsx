@@ -6,6 +6,8 @@ import { useCart } from "@/Context/CartContext";
 import { useAuth } from "@/Context/AuthContext";
 import { useState } from "react";
 import { useWishlist } from "@/Context/WishlistContext";
+import ModalInfo from "../ui/ModalInfo";
+import ModalCartInfo from "../ui/ModalCartInfo";
 
 const HeaderSection = () => {
 	const router = useRouter();
@@ -14,6 +16,8 @@ const HeaderSection = () => {
 	const { cartCount } = useCart();
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalCartOpen, setIsModalCartOpen] = useState(false);
 	const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
 	return (
@@ -21,15 +25,8 @@ const HeaderSection = () => {
 			<header className={`bg-white shadow`}>
 				<div className="container mx-auto flex justify-between items-center py-4 px-6">
 					<div className="flex justify-start rounded-3xl p-4 ">
-						<Image
-							src="/icons/home.png"
-							className="w-15 h-8 me-4 "
-							width={24}
-							height={24}
-							alt=""
-						/>
 						<h1 className="font-bold text-xl py-1 ">
-							<span className="text-primary ">E-</span>Commerce
+							<span className="text-primary text-3xl ">E-</span>Commerce
 						</h1>
 					</div>
 					<div className="lg:hidden flex justify-between ">
@@ -37,14 +34,14 @@ const HeaderSection = () => {
 							<div className="flex justify-between space-x-4">
 								<Link
 									href="/auth/login"
-									className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+									className="bg-primary text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 								>
 									Login
 								</Link>
 
 								<Link
 									href="/auth/register"
-									className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+									className="bg-primary text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 								>
 									SignIn
 								</Link>
@@ -71,12 +68,20 @@ const HeaderSection = () => {
 							>
 								Home
 							</Link>
-							<Link
-								href="/products"
+
+							<button
+								onClick={() => {
+									if (user) {
+										router.push("/products");
+									} else {
+										setIsMenuOpen(true);
+									}
+								}}
 								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Shop
-							</Link>
+							</button>
+
 							{user && (
 								<>
 									<Link
@@ -115,31 +120,29 @@ const HeaderSection = () => {
 									<button
 										onClick={() => {
 											cartCount == 0
-												? alert(
-														"You should add products to your cart then proceed to it"
-												  )
+												? setIsModalCartOpen(true)
 												: router.push("/cart");
 										}}
 										className="text-gray-600 hover:text-gray-800 px-4 font-bold text-xl"
 									>
 										Your cart
-										<span className="text-red-600 me-1">({cartCount})</span>
+										<span className="text-primary me-1">({cartCount})</span>
 									</button>
 								</div>
 							) : (
 								<div className="flex justify-between space-x-4">
 									<Link
 										href="/auth/login"
-										className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+										className="bg-primary text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 									>
 										Login
 									</Link>
 
 									<Link
 										href="/auth/register"
-										className="bg-black text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
+										className="bg-primary text-white px-4 py-2 rounded-md hover:bg-white hover:text-black border hover:font-bold"
 									>
-										Register
+										SignIn
 									</Link>
 								</div>
 							)}
@@ -150,67 +153,90 @@ const HeaderSection = () => {
 				{isMenuOpen && (
 					<div className="lg:hidden relative w-1/2 right-0 bg-white shadow-lg p-4">
 						<nav className="flex flex-col space-y-4">
-							<Link
-								href="/"
+							<button
+								onClick={() => {
+									router.push("/");
+								}}
 								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Home
-							</Link>
-							<Link
-								href="/products"
+							</button>
+							<button
+								onClick={() => {
+									if (user) {
+										router.push("/products");
+									} else {
+										setIsModalOpen(true);
+									}
+								}}
 								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Shop
-							</Link>
-							<Link
-								href="/wishlist"
+							</button>
+							<button
+								onClick={() => {
+									if (user) {
+										router.push("/wishlist");
+									} else {
+										setIsModalOpen(true);
+									}
+								}}
 								className="text-gray-600 hover:text-gray-800 hover:underline"
 							>
 								Wishlist
-							</Link>
-							<Link
-								href="#"
-								className="text-gray-600 hover:text-gray-800 hover:underline"
-							>
-								Profile
-							</Link>
+							</button>
 							{user && (
-								<button
-									onClick={logout}
-									className="text-gray-600 hover:text-gray-800 hover:border-collapse hover:border hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
-								>
-									Logout
-								</button>
+								<>
+									<button
+										onClick={() => {
+											router.push("/profile");
+										}}
+										className="text-gray-600 hover:text-gray-800 hover:underline"
+									>
+										Profile
+									</button>
+
+									<button
+										onClick={logout}
+										className="text-gray-600 hover:text-gray-800 hover:border-collapse hover:border hover:border-gray-300 px-4 py-2 hover:rounded-xl hover:font-bold"
+									>
+										Logout
+									</button>
+								</>
 							)}
 							{user ? (
-								<div className="flex justify-between rounded-3xl border-collapse border-2 ps-4 py-2">
-									<Image
-										src="/icons/shopping-cart.png"
-										className="w-22 h-15"
-										width={22}
-										height={15}
-										alt=""
-									/>
+								<>
 									<button
 										onClick={() => {
 											cartCount == 0
-												? alert(
-														"You should add products to your cart then proceed to it"
-												  )
+												? setIsModalCartOpen(true)
 												: router.push("/cart");
 										}}
-										className="text-gray-600 hover:text-gray-800 px-4 font-bold text-xl"
+										className="flex justify-center  px-4 font-bold text-xl text-gray-600 hover:text-gray-800 hover:border-collapse hover:border hover:border-gray-300  py-2 hover:rounded-xl hover:font-bold"
 									>
-										Your cart
-										<span className="text-red-600 me-1">({cartCount})</span>
+										<Image
+											src="/icons/shopping-cart.png"
+											className="w-22 h-15"
+											width={22}
+											height={15}
+											alt=""
+										/>
+										<span className="text-primary px-2 mt-0">
+											({cartCount})
+										</span>
 									</button>
-								</div>
+								</>
 							) : (
 								""
 							)}
 						</nav>
 					</div>
 				)}
+				<ModalInfo isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+				<ModalCartInfo
+					isOpen={isModalCartOpen}
+					onClose={() => setIsModalCartOpen(false)}
+				/>
 			</header>
 		</>
 	);

@@ -44,4 +44,11 @@ export class WishlistController {
     const user = req.user as User;
     return this.wishlistService.removeItemFromWishlist(user, productId);
   }
+
+  //delete all the wishlist items and wishlist itself from the database for all the users
+    @Delete('delete-all')
+    async deleteAllWishlist(): Promise<string> {
+      return this.wishlistService.deleteAllWishlist();
+    }
+
 }

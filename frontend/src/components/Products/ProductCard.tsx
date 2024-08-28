@@ -11,10 +11,10 @@ import API_BASE_URL from "@/utils/config";
 
 const ProductCard = ({
 	product,
-	onProductUpdate,
-}: {
+}: // onProductUpdate,
+{
 	product: any;
-	onProductUpdate: (updatedProduct: any) => void;
+	// onProductUpdate: (updatedProduct: any) => void;
 }) => {
 	const token = Cookies.get("authToken");
 	const [alertMessage, setAlertMessage] = useState<{
@@ -44,7 +44,7 @@ const ProductCard = ({
 
 	const mutation = useMutation({
 		mutationFn: addProductToCart,
-		onSuccess: (updatedProduct) => {
+		onSuccess: () => {
 			setAlertMessage({
 				title: "Item Added to Cart",
 				description: "Product has been added successfully.",
@@ -55,9 +55,9 @@ const ProductCard = ({
 			}, 5000);
 
 			// to update the product in the parent component
-			console.log("updatedProduct", updatedProduct);
+			// console.log("updatedProduct", updatedProduct);
 
-			onProductUpdate(updatedProduct);
+			// onProductUpdate(updatedProduct);
 		},
 		onError: (error: Error) => {
 			let errorMessage = "Failed to add product to cart.";

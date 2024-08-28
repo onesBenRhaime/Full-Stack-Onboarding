@@ -23,6 +23,7 @@ interface WishlistContextType {
 	addToWishlist: (product: Product) => void;
 	removeFromWishlist: (productId: number) => void;
 	isInWishlist: (productId: number) => boolean;
+	deleteAllWishlist: () => void;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(
@@ -84,6 +85,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 			});
 			if (response.ok) {
 				setWishlist((prevWishlist) => [...prevWishlist, product]);
+				setWishlistCount((prevCount) => prevCount + 1);
 			} else {
 				console.error("Failed to add item to wishlist");
 			}
@@ -112,6 +114,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 				setWishlist((prevWishlist) =>
 					prevWishlist.filter((item) => item.id !== productId)
 				);
+				setWishlistCount((prevCount) => Math.max(prevCount - 1, 0));
 			} else {
 				console.error("Failed to remove item from wishlist");
 			}
@@ -125,8 +128,25 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 			Array.isArray(wishlist) && wishlist.some((item) => item.id === productId)
 		);
 	};
-
-	//need to get the wishlist content length to display in the header
+	const deleteAllWishlist = async () => {
+		try {
+			const token = Cookies.get("authToken");
+			const response = await fetch(`${API_BASE_URL}wishlist/delete-all`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			if (response.ok) {
+				setWishlist([]);
+				setWishlistCount(0);
+			} else {
+				console.error("Failed to clear wishlist");
+			}
+		} catch (error) {
+			console.error("Failed to clear wishlist", error);
+		}
+	};
 
 	return (
 		<WishlistContext.Provider
@@ -136,6 +156,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 				addToWishlist,
 				removeFromWishlist,
 				isInWishlist,
+				deleteAllWishlist,
 			}}
 		>
 			{children}

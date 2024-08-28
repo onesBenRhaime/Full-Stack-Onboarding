@@ -80,4 +80,12 @@ export class WishlistService {
     await this.wishlistItemRepository.remove(wishlistItem);
     return this.getWishlist(user);
   }
+
+  //delete all the wishlist items and wishlist itself from the database for all the users
+  async deleteAllWishlist(): Promise<string> {
+    await this.wishlistItemRepository.delete({});
+    await this.wishlistRepository.delete({});
+
+    return 'All Wishlist items and Wishlist deleted successfully';
+  }
 }

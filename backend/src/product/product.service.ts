@@ -50,7 +50,7 @@ export class ProductService {
   async getNewArrivals(): Promise<Product[]> {
     return this.productRepository.find({
       order: { createdAt: 'DESC' },
-      // relations: ['category'],
+      relations: ['category'],
       take: 5,
     });
   }

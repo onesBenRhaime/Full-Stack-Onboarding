@@ -154,7 +154,6 @@ const Sidebar = ({
 				</div>
 			</div>
 
-			{/* Overlay */}
 			{isOpen && (
 				<div
 					className="fixed inset-0 bg-black opacity-50 lg:hidden"
