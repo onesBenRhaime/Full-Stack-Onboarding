@@ -48,6 +48,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 		setCartCount(0);
 	};
 
+	
 	return (
 		<CartContext.Provider
 			value={{ cartCount, addToCart, deleteFromCart, clearCartCount }}

@@ -26,7 +26,6 @@ export class CartService {
       where: { user },
       relations: ['items', 'items.product'],
     });
-    // console.log('cart : ', cart);
 
     if (!cart) {
       throw new NotFoundException('Cart not found for this user.');
@@ -44,7 +43,6 @@ export class CartService {
     console.log('Product ID:', productId);
     console.log('Quantity:', quantity);
 
-    // Retrieve the cart for the current user, including its items and the associated products
     let cart = await this.cartRepository.findOne({
       where: { user },
       relations: ['items', 'items.product'],
@@ -52,7 +50,6 @@ export class CartService {
 
     console.log('Initial Cart:', cart);
 
-    // If no cart exists, create a new one for the user
     if (!cart) {
       cart = this.cartRepository.create({ user, items: [] });
       console.log('Created New Cart:', cart);
@@ -65,25 +62,17 @@ export class CartService {
     });
     console.log('Product:', product);
 
-    // If the product doesn't exist, throw an error
     if (!product) {
       throw new NotFoundException('Product not found');
     }
 
-    // Check if the product is already in the cart
     let cartItem = cart.items.find((item) => item.product.id === productId);
 
     if (cartItem) {
-      // If the product exists in the cart, update the quantity by adding the new quantity
-      console.log('Existing CartItem:', cartItem);
       cartItem.quantity += quantity;
-      console.log('Updated CartItem Quantity:', cartItem.quantity);
 
-      // Save the updated cart item
       await this.cartItemRepository.save(cartItem);
-      console.log('Saved Updated CartItem:', cartItem);
     } else {
-      // If the product does not exist in the cart, create a new cart item
       cartItem = this.cartItemRepository.create({ cart, product, quantity });
       cart.items.push(cartItem);
       console.log('Added New CartItem:', cartItem);
@@ -92,11 +81,9 @@ export class CartService {
       await this.cartItemRepository.save(cartItem);
     }
 
-    // Save the updated cart with the new/updated items
     await this.cartRepository.save(cart);
     console.log('Saved Cart:', cart);
 
-    // Retrieve and return the updated cart for the user
     const updatedCart = await this.getCart(user);
     console.log('Updated Cart:', updatedCart);
 
@@ -108,17 +95,11 @@ export class CartService {
       where: { id: cartItemId },
       relations: ['cart'],
     });
-    // console.log('cartItem : ', cartItem);
-
-    // if (!cartItem || cartItem.cart.user.id !== user.id) {
-    //   throw new UnauthorizedException('You cannot remove this item');
-    // }
 
     await this.cartItemRepository.remove(cartItem);
     return this.getCart(user);
   }
 
-  // Edit the quantity of the product in the cart
   async editItemInCart(
     user: User,
     cartItemId: number,
@@ -140,7 +121,6 @@ export class CartService {
   }
 
   async clearCart(user: User): Promise<void> {
-    // Assuming you have a method to find the user's cart and clear its items
     const cart = await this.getCart(user);
     cart.items = [];
     await this.cartRepository.save(cart);

@@ -31,6 +31,18 @@ export default function Dash() {
 										</button>
 									</div>
 								</div>
+								<div className="bg-white p-4 rounded-xl shadow-lg flex flex-col">
+									<div className="flex flex-col flex-grow">
+										<button onClick={deleteAllWishlist}>Clear all users</button>
+									</div>
+								</div>
+								<div className="bg-white p-4 rounded-xl shadow-lg flex flex-col">
+									<div className="flex flex-col flex-grow">
+										<button onClick={deleteAllWishlist}>
+											Clear all orders
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
