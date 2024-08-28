@@ -101,7 +101,7 @@ export default function Register() {
 
 	return (
 		<>
-			<section className="flex flex-col lg:flex-row lg:justify-start justify-center lg:items-start items-center lg:space-x-0 space-x-2 lg:space-y-32 space-y-2 fixed inset-0 lg:static">
+			<section className="flex flex-col lg:flex-row lg:justify-start justify-center lg:items-start items-center lg:space-x-0 space-x-0 lg:space-y-40 space-y-40 fixed inset-0 lg:static">
 				<div className="lg:w-auto w-full lg:h-auto h-full flex justify-center items-center">
 					<h1 className=" fixed left-20 top-8 z-0  font-bold text-5xl">
 						<span className="text-primary  ">E-</span>commerce
