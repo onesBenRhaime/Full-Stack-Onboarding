@@ -32,7 +32,6 @@ export default function MyOrders() {
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl font-bold">My orders </h1>
 			</div>
-
 			<div className="overflow-x-auto">
 				<table className="min-w-full bg-white">
 					<thead>
@@ -44,7 +43,7 @@ export default function MyOrders() {
 							<th className="py-3 px-6 text-left">Payment Method</th>
 						</tr>
 					</thead>
-					<tbody className=" text-md font-light">
+					<tbody className="text-gray-600 text-sm font-light">
 						{products?.map((order: any, index: any) => (
 							<tr
 								key={index}
@@ -59,15 +58,13 @@ export default function MyOrders() {
 								</td>
 								<td className="py-3 px-6 text-left">
 									<span
-										className={
-											`${
-												order.status === "Completed"
-													? "bgtext-green-500"
-													: order.status === "Pending"
-													? "text-yellow-500"
-													: "text-red-500"
-											}` + " py-1 px-3 rounded-full bg-gray-200 font-semibold"
-										}
+										className={`${
+											order.status === "Completed"
+												? "text-green-500"
+												: order.status === "Pending"
+												? "text-yellow-500"
+												: "text-red-500"
+										} py-1 px-3 rounded-full bg-gray-200 font-semibold`}
 									>
 										{order.status}
 									</span>

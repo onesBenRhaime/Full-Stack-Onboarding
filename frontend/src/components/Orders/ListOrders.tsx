@@ -105,13 +105,13 @@ export default function ListOrder() {
 								</td>
 								<td className="py-3 px-6 text-left">
 									<button
-										className="text-black p-2 border-collapse border-2 mx-2  r-2 border-green-500"
+										className="text-black p-2 border-collapse border-2 mx-2 r-2 border-green-500"
 										onClick={() => handleAcceptOrder(order.id)}
 									>
 										✔
 									</button>
 									<button
-										className="text-black p-2 border-collapse border-2 mx-2  r-2 border-red-500"
+										className="text-black p-2 border-collapse border-2 mx-2 r-2 border-red-500"
 										onClick={() => handleRejectOrder(order.id)}
 									>
 										❌

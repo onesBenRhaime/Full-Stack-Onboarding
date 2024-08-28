@@ -168,7 +168,7 @@ export default function ListUsers() {
 			<div className="overflow-x-auto">
 				<table className="min-w-full bg-white">
 					<thead>
-						<tr className="w-full text-gray-600 uppercase text-sm leading-normal">
+						<tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
 							<th className="py-3 px-6 text-left">Profile</th>
 							<th className="py-3 px-6 text-left">Name</th>
 							<th className="py-3 px-6 text-left">Username</th>
@@ -201,9 +201,9 @@ export default function ListUsers() {
 								<td className="py-3 px-6 text-left">
 									<span>{user.email}</span>
 								</td>
-								<td className="py-3 px-6 text-left">
+								<td className="py-3 px-6 text-left flex flex-wrap gap-2">
 									<button
-										className="text-black border-collapse border-2 me-2 border-primary rounded-xl p-2"
+										className="text-black border-collapse border-2 border-primary rounded-xl p-2"
 										onClick={() => handleAssignRole(user.id, "admin")}
 									>
 										Give Admin Role
