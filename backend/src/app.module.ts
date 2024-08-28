@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import * as dotenv from 'dotenv';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { CategoryModule } from './category/category.module';
@@ -7,7 +8,7 @@ import { OrderModule } from './order/order.module';
 import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { WishlistModule } from './wishlist/wishlist.module';
-
+dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forRoot({
