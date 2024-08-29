@@ -11,6 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'https://full-stack-onboarding.vercel.app',
+      'https://e-commerce-blue-sigma.vercel.app',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
